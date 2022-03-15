@@ -7,7 +7,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Proxy {
-    ServerSocket server;
+
+    private ServerSocket server;
+
     public Proxy(String host, int port) {
         try {
             server = new ServerSocket(port);
@@ -16,12 +18,13 @@ public class Proxy {
             System.out.println("Cannot open server");
             System.exit(0);
         }
+
         while(true) {
             try {
                 Socket socket = server.accept();
-                SSLSocket sslSocket = ProxyMethods.convertSocketToSSL(socket);
+                //SSLSocket sslSocket = ProxyMethods.convertSocketToSSL(socket);
 
-                SocketThread st = new SocketThread(sslSocket);
+                SocketThread st = new SocketThread(socket);
 
                 Thread t = new Thread(st);
                 t.start();

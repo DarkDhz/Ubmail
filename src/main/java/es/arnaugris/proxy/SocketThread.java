@@ -5,15 +5,17 @@ import javax.net.ssl.SSLSocket;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+// https://stackoverflow.com/questions/66534689/how-do-i-code-my-own-smtp-server-using-java
+// https://es.wikipedia.org/wiki/Protocolo_para_transferencia_simple_de_correo
 
 public class SocketThread implements Runnable {
 
-    SSLSocket socket;
-    SSLSocket mail_service;
+    private Socket socket;
+    private SSLSocket mail_service;
 
-    public SocketThread(SSLSocket soc) {
+    public SocketThread(Socket soc) {
         socket = soc;
-        try {
+        /*try {
             Socket s = new Socket("smtp.email.host", 25);
             mail_service = ProxyMethods.convertSocketToSSL(s);
 
@@ -21,21 +23,24 @@ public class SocketThread implements Runnable {
             e.printStackTrace();
         } catch (IOException exception) {
             exception.printStackTrace();
-        }
+        }*/
 
     }
 
     public void run() {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter writer = new PrintWriter(mail_service.getOutputStream(), true);
+            final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "8859_1"));
+            final BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "8859_1"));
 
-            System.out.println("hpla");
-            System.out.println(reader.readLine());
-            writer.println("HOLA");
+            SMTProtocol protocol_handler = new SMTProtocol(in, out);
+            protocol_handler.handle();
 
         } catch (IOException e) {
-            // todo
+            try {
+                socket.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }
