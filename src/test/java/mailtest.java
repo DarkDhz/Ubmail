@@ -14,9 +14,10 @@ public class mailtest {
     public void test() throws IOException, MessagingException {
         Properties prop = new Properties();
         prop.put("mail.smtp.auth", false);
-        prop.put("mail.smtp.starttls.enable", "false");
+        prop.put("mail.smtp.starttls.enable", "true");
+        //prop.put("mail.smtp.ssl.enable", "true");
         prop.put("mail.smtp.host", "localhost");
-        prop.put("mail.smtp.port", "25");
+        prop.put("mail.smtp.port", "587");
 
         Message message = new MimeMessage(Session.getDefaultInstance(prop));
         message.setFrom(new InternetAddress("from@gmail.com"));
