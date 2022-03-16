@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 
 public class SocketThread implements Runnable {
 
-    private Socket socket;
+    private final Socket socket;
     private SSLSocket mail_service;
 
     public SocketThread(Socket soc) {

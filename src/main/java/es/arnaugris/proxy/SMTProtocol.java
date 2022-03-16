@@ -1,6 +1,8 @@
 package es.arnaugris.proxy;
 
 
+import es.arnaugris.utils.MailData;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -9,16 +11,16 @@ public class SMTProtocol {
 
     private final BufferedReader in;
     private final BufferedWriter out;
-    private MailData mail;
+    private final MailData mail;
 
     public SMTProtocol(BufferedReader reader, BufferedWriter writer) {
         this.in = reader;
         this.out = writer;
-        mail = new MailData();
+        this.mail = new MailData();
     }
 
     public void handle() throws IOException {
-        String readed = "nothing";
+        String readed;
         send("220 Hola buenas soy el servidor");
 
         while (true) {
@@ -56,26 +58,28 @@ public class SMTProtocol {
     }
 
     private void response(String message) throws IOException {
-        System.out.println(message);
-        String header = split_message(message);
+        String opcode = split_message(message);
 
-        if (header.equalsIgnoreCase("EHLO")) {
+        if (opcode.equalsIgnoreCase("EHLO")) {
             this.send("250 HELLO");
-        } else if (header.equalsIgnoreCase("MAIL")) {
+        } else if (opcode.equalsIgnoreCase("MAIL")) {
             this.send("250 OK");
-            //TODO
-        } else if (header.equalsIgnoreCase("RCPT")) {
+            mail.clearAndSetMail_from(message);
+        } else if (opcode.equalsIgnoreCase("RCPT")) {
             this.send("250 OK");
-            //TODO
-        } else if (header.equalsIgnoreCase("DATA")) {
+            mail.clearAndAddMail_to(message);
+        } else if (opcode.equalsIgnoreCase("DATA")) {
             this.send("354 OK");
-            //TODO
-        } else if (header.equalsIgnoreCase(".")) {
+        } else if (opcode.equalsIgnoreCase(".")) {
             this.send("250 OK");
-            //TODO
-        } else if (header.equalsIgnoreCase("QUIT")) {
+        } else if (opcode.equalsIgnoreCase("QUIT")) {
             this.send("221 Bye");
+            System.out.println(mail.getMail_from());
+            System.out.println(mail.getMailTo());
+            System.out.println(mail.getData());
             throw new IOException("close socket");
+        } else {
+            mail.addData(message);
         }
     }
 

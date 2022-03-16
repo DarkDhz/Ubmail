@@ -6,19 +6,21 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Proxy {
+public class Proxy implements Runnable{
 
     private ServerSocket server;
 
-    public Proxy(String host, int port) {
+    public Proxy(String host, int port) throws IOException {
         try {
             server = new ServerSocket(port);
             System.out.println("Server iniciado");
         } catch (IOException e) {
-            System.out.println("Cannot open server");
-            System.exit(0);
+            throw new IOException("Cannot open server");
+            //System.exit(0);
         }
+    }
 
+    public void run() {
         while(true) {
             try {
                 Socket socket = server.accept();
@@ -35,6 +37,6 @@ public class Proxy {
 
 
         }
-    }
 
+    }
 }
