@@ -44,19 +44,20 @@ public class SMTProtocol {
         if (opcode.equalsIgnoreCase("EHLO")) {
             this.send("250 ubmail");
 
-            /* USE TLS
+            /*//USE TLS
             this.send("250-smtp.server.com");
-            this.send("250-AUTH GSSAPI DIGEST-MD5");
-            this.send("250-ENHANCEDSTATUSCODES");
-            this.send("250 STARTTLS");
+            this.send("250-SIZE 52428800");
+            this.send("250-8BITMIME");
+            this.send("250-PIPELINING");
+            this.send("250-STARTTLS");
+            this.send("250 HELP");
             */
-
             /* USE PLAIN
             this.send("250-smtp.example.com Hello client.example.com");
             this.send("250 AUTH GSSAPI DIGEST-MD5 PLAIN");
             */
         } else if (opcode.equalsIgnoreCase("STARTTLS")) {
-            this.send("220 Ready to start TLS");
+            this.send("220 TLS go ahead");
         } else if (opcode.equalsIgnoreCase("AUTH")) {
             this.send("235 2.7.0 Authentication successful");
         } else if (opcode.equalsIgnoreCase("MAIL")) {
@@ -76,6 +77,7 @@ public class SMTProtocol {
             System.out.println(mail.getData());
             throw new IOException("close socket");
         } else {
+            System.out.println("hola");
             mail.addData(message);
         }
     }
