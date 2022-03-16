@@ -43,12 +43,22 @@ public class SMTProtocol {
 
         if (opcode.equalsIgnoreCase("EHLO")) {
             this.send("250 ubmail");
-            //this.send("250-smtp.server.com");
-            //this.send("250-AUTH GSSAPI DIGEST-MD5");
-            //this.send("250-ENHANCEDSTATUSCODES");
-            //this.send("250 STARTTLS");
+
+            /* USE TLS
+            this.send("250-smtp.server.com");
+            this.send("250-AUTH GSSAPI DIGEST-MD5");
+            this.send("250-ENHANCEDSTATUSCODES");
+            this.send("250 STARTTLS");
+            */
+
+            /* USE PLAIN
+            this.send("250-smtp.example.com Hello client.example.com");
+            this.send("250 AUTH GSSAPI DIGEST-MD5 PLAIN");
+            */
         } else if (opcode.equalsIgnoreCase("STARTTLS")) {
             this.send("220 Ready to start TLS");
+        } else if (opcode.equalsIgnoreCase("AUTH")) {
+            this.send("235 2.7.0 Authentication successful");
         } else if (opcode.equalsIgnoreCase("MAIL")) {
             this.send("250 OK");
             mail.clearAndSetMail_from(message);
