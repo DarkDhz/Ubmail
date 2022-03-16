@@ -25,6 +25,7 @@ public class SMTProtocol {
 
         while (true) {
             readed = this.read();
+            System.out.println(readed);
 
             if (readed == null) {
                 throw new IOException("close socket");
@@ -33,35 +34,21 @@ public class SMTProtocol {
             response(readed);
         }
 
-
-
-        /*System.out.println(in.readLine());
-
-        out.write("250 Hola buenas soy el servidor " + "\n");
-        out.flush();
-
-        System.out.println(in.readLine());
-
-        out.write("250 OK " + "\n");
-        out.flush();
-
-        System.out.println(in.readLine());
-
-        out.write("250 OK " + "\n");
-        out.flush();*/
-
     }
 
-    private String split_message(String message) {
-        return message.split(" ")[0];
-
-    }
+    private String split_message(String message) { return message.split(" ")[0]; }
 
     private void response(String message) throws IOException {
         String opcode = split_message(message);
 
         if (opcode.equalsIgnoreCase("EHLO")) {
-            this.send("250 HELLO");
+            this.send("250 ubmail");
+            //this.send("250-smtp.server.com");
+            //this.send("250-AUTH GSSAPI DIGEST-MD5");
+            //this.send("250-ENHANCEDSTATUSCODES");
+            //this.send("250 STARTTLS");
+        } else if (opcode.equalsIgnoreCase("STARTTLS")) {
+            this.send("220 Ready to start TLS");
         } else if (opcode.equalsIgnoreCase("MAIL")) {
             this.send("250 OK");
             mail.clearAndSetMail_from(message);

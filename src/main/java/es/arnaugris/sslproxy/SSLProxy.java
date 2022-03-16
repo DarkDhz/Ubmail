@@ -31,8 +31,10 @@ public class SSLProxy implements Runnable{
         }
     }
 
+    // https://www.plusplushosting.net/es/blog/starttls-ssl-y-tls-cual-es-la-diferencia/
     // https://docs.oracle.com/javaee/5/tutorial/doc/bnbxw.html
     // https://stackoverflow.com/questions/34793660/how-to-create-a-secured-tcp-connection-via-tls-v-1-2-in-java
+
     public void run() {
         while (true) {
             try {
