@@ -17,10 +17,8 @@ public class SSLSocketThread implements Runnable {
 
     public void run() {
         try {
-            final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "8859_1"));
-            final BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "8859_1"));
 
-            SMTProtocol protocol_handler = new SMTProtocol(in, out);
+            SSLSMTProtocol protocol_handler = new SSLSMTProtocol(socket);
             protocol_handler.handle();
 
         } catch (IOException e) {

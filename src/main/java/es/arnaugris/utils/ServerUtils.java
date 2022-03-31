@@ -20,14 +20,5 @@ public class ServerUtils {
         return server;
     }
 
-    protected SSLSocket createSSLSocket(Socket socket) throws IOException {
-        SSLSocketFactory sf = ((SSLSocketFactory) SSLSocketFactory.getDefault());
-        InetSocketAddress remoteAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
-        SSLSocket s = (SSLSocket) (sf.createSocket(socket, remoteAddress.getHostName(), socket.getPort(), true));
 
-        s.setUseClientMode(false);
-        s.setEnabledCipherSuites(s.getSupportedCipherSuites());
-
-        return s;
-    }
 }
