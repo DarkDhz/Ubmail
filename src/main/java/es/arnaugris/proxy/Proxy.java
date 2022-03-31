@@ -32,7 +32,7 @@ public class Proxy implements Runnable{
                 t.start();
             } catch (IOException e) {
                 System.out.println(e.getMessage());
-                System.exit(0);
+                break;
             }
 
 
