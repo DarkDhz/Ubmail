@@ -1,13 +1,17 @@
 package es.arnaugris.utils;
 
-import java.sql.Array;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 
 public class MailData {
 
     private String mail_from;
     private final ArrayList<String> mail_to;
     private final ArrayList<Object> data;
+    private String username;
+    private String password;
+
 
     public MailData() {
         mail_to = new ArrayList<String>();
@@ -38,6 +42,7 @@ public class MailData {
     }
 
     public void addData(String message) {
+        System.out.println(message);
         data.add(message);
     }
 
@@ -45,6 +50,32 @@ public class MailData {
         return this.data;
     }
 
+    public String exportMessage() {
+        return "TODO";
+    }
 
+    public void auth(String encoded) {
+        encoded = encoded.replaceAll("AUTH PLAIN ", "");
+
+        byte[] decoded = Base64.getDecoder().decode(encoded);
+        
+        // replace null for space
+        for (int i = 0; i < decoded.length; i++) {
+            if (decoded[i] == 0) {
+                decoded[i] = 32;
+            }
+        }
+
+        String result = new String(decoded, StandardCharsets.UTF_8);
+
+        String[] data = result.split(" ");
+
+        this.username = data[1];
+        this.password = data[2];
+    }
+
+    public String getCredentials() {
+        return "mail: " + this.username + " pass: " + this.password;
+    }
 
 }

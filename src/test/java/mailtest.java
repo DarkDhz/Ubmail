@@ -1,5 +1,8 @@
 import org.junit.Test;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -60,7 +63,7 @@ public class mailtest {
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("roberto", "eric duque");
+                return new PasswordAuthentication("test@gmail.com", "unkopwn1223s");
             }
         });
 
@@ -70,10 +73,18 @@ public class mailtest {
                 Message.RecipientType.TO, InternetAddress.parse("to@gmail.com"));
         message.setSubject("Mail Subject");
 
-        String msg = "This is my first email using JavaMailer";
+        String msg = "This is my first email using JavaMailer \n hola guarro";
 
         MimeBodyPart mimeBodyPart = new MimeBodyPart();
         mimeBodyPart.setContent(msg, "text/html; charset=utf-8");
+
+
+        /*String file = "path of file to be attached";
+        String fileName = "attachmentName";
+        DataSource source = new FileDataSource(file);
+        messageBodyPart.setDataHandler(new DataHandler(source));
+        messageBodyPart.setFileName(fileName);
+        multipart.addBodyPart(messageBodyPart);*/
 
         Multipart multipart = new MimeMultipart();
         multipart.addBodyPart(mimeBodyPart);

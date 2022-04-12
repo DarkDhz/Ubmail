@@ -25,7 +25,6 @@ public class SMTProtocol {
 
         while (true) {
             readed = this.read();
-            System.out.println(readed);
 
             if (readed == null) {
                 throw new IOException("close socket");
@@ -42,7 +41,7 @@ public class SMTProtocol {
         String opcode = split_message(message);
 
         if (opcode.equalsIgnoreCase("EHLO")) {
-            this.send("250 ubmail");
+            //this.send("250 ubmail");
 
             /*//USE TLS
             this.send("250-smtp.server.com");
@@ -52,13 +51,14 @@ public class SMTProtocol {
             this.send("250-STARTTLS");
             this.send("250 HELP");
             */
-            /* USE PLAIN
+
             this.send("250-smtp.example.com Hello client.example.com");
             this.send("250 AUTH GSSAPI DIGEST-MD5 PLAIN");
-            */
+
         } else if (opcode.equalsIgnoreCase("STARTTLS")) {
             this.send("220 TLS go ahead");
         } else if (opcode.equalsIgnoreCase("AUTH")) {
+            mail.auth(message);
             this.send("235 2.7.0 Authentication successful");
         } else if (opcode.equalsIgnoreCase("MAIL")) {
             this.send("250 OK");
@@ -75,9 +75,9 @@ public class SMTProtocol {
             System.out.println(mail.getMail_from());
             System.out.println(mail.getMailTo());
             System.out.println(mail.getData());
+            System.out.println(mail.getCredentials());
             throw new IOException("close socket");
         } else {
-            System.out.println("hola");
             mail.addData(message);
         }
     }
