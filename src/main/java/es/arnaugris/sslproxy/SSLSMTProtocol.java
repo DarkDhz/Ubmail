@@ -6,6 +6,7 @@ import es.arnaugris.utils.SocketUtils;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSocket;
 import java.io.*;
+import java.security.cert.Certificate;
 import java.net.Socket;
 
 public class SSLSMTProtocol extends SocketUtils {
@@ -14,6 +15,7 @@ public class SSLSMTProtocol extends SocketUtils {
     private final BufferedWriter out;
     private Socket socket;
     private final MailData mail;
+    private boolean reset = false;
 
     public SSLSMTProtocol(Socket socket) throws IOException {
         this.socket = socket;
@@ -45,20 +47,17 @@ public class SSLSMTProtocol extends SocketUtils {
         String opcode = split_message(message);
 
         if (opcode.equalsIgnoreCase("EHLO")) {
-            this.send("250 ubmail");
-
-            /*//USE TLS
-            this.send("250-smtp.server.com");
-            this.send("250-SIZE 52428800");
-            this.send("250-8BITMIME");
-            this.send("250-PIPELINING");
-            this.send("250-STARTTLS");
-            this.send("250 HELP");
-            */
-            /* USE PLAIN
-            this.send("250-smtp.example.com Hello client.example.com");
-            this.send("250 AUTH GSSAPI DIGEST-MD5 PLAIN");
-            */
+            if (reset) {
+                this.send("250 ubmail");
+            } else {
+                //USE TLS
+                this.send("250-smtp.server.com");
+                this.send("250-SIZE 52428800");
+                this.send("250-8BITMIME");
+                this.send("250-PIPELINING");
+                this.send("250-STARTTLS");
+                this.send("250 HELP");
+            }
         } else if (opcode.equalsIgnoreCase("STARTTLS")) {
             if (socket instanceof SSLSocket) {
                 this.send("454 TLS ALREADY ACTIVE");
@@ -67,18 +66,17 @@ public class SSLSMTProtocol extends SocketUtils {
             this.send("220 TLS go ahead");
             SSLSocket s = super.createSSLSocket(socket);
             s.startHandshake();
-            //log.debug("Cipher suite: " + s.getSession().getCipherSuite());
 
-            socket.setSocket(s);
-            sess.resetSmtpProtocol(); // clean state
-            sess.setTlsStarted(true);
+            socket = s;
+            reset = true;
+            //sess.setTlsStarted(true);
 
             if (s.getNeedClientAuth())
             {
                 try
                 {
                     Certificate[] peerCertificates = s.getSession().getPeerCertificates();
-                    sess.setTlsPeerCertificates(peerCertificates);
+                    //sess.setTlsPeerCertificates(peerCertificates);
                 }
                 catch (SSLPeerUnverifiedException e)
                 {
@@ -104,7 +102,7 @@ public class SSLSMTProtocol extends SocketUtils {
             System.out.println(mail.getData());
             throw new IOException("close socket");
         } else {
-            System.out.println("hola");
+            //System.out.println("hola");
             mail.addData(message);
         }
     }

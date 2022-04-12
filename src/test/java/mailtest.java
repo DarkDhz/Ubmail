@@ -95,4 +95,51 @@ public class mailtest {
         //prop.put("mail.smtp.ssl.trust", "smtp.mailtrap.io");
     }
 
+    @Test
+    public void testwithSSL() throws IOException, MessagingException {
+        Properties prop = new Properties();
+
+        prop.put("mail.smtp.host", "localhost");
+        prop.put("mail.smtp.port", "465");
+        prop.put("mail.smtp.auth", "true");
+        prop.put("mail.smtp.starttls.enable", "true");
+        prop.put("mail.smtp.starttls.required", "true");
+        prop.put("mail.smtp.ssl.protocols", "TLSv1.2");
+        //prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+
+        Session session = Session.getInstance(prop, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("test@gmail.com", "unkopwn1223s");
+            }
+        });
+
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress("from@gmail.com"));
+        message.setRecipients(
+                Message.RecipientType.TO, InternetAddress.parse("to@gmail.com"));
+        message.setSubject("Mail Subject");
+
+        String msg = "This is my first email using JavaMailer \n hola guarro";
+
+        MimeBodyPart mimeBodyPart = new MimeBodyPart();
+        mimeBodyPart.setContent(msg, "text/html; charset=utf-8");
+
+
+        /*String file = "path of file to be attached";
+        String fileName = "attachmentName";
+        DataSource source = new FileDataSource(file);
+        messageBodyPart.setDataHandler(new DataHandler(source));
+        messageBodyPart.setFileName(fileName);
+        multipart.addBodyPart(messageBodyPart);*/
+
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(mimeBodyPart);
+
+        message.setContent(multipart);
+
+        Transport.send(message);
+        //prop.put("mail.smtp.ssl.trust", "smtp.mailtrap.io");
+    }
+
 }

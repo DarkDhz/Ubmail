@@ -37,7 +37,7 @@ public class SSLProxy extends ServerUtils implements Runnable{
                 Socket socket = server.accept();
                 //SSLSocket sslSocket = ProxyMethods.convertSocketToSSL(socket);
 
-                SocketThread st = new SocketThread(socket);
+                SSLSocketThread st = new SSLSocketThread(socket);
 
                 Thread t = new Thread(st);
                 t.start();

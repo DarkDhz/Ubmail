@@ -20,13 +20,13 @@ public class main {
             System.out.println("cannot open the server on port 25");
         }
 
-        /*try {
-            SSLProxy sslProxy = new SSLProxy("54.36.191.29", 465);
+        try {
+            SSLProxy sslProxy = new SSLProxy("127.0.0.1", 465);
             Thread t2 = new Thread(sslProxy);
             t2.start();
         } catch (IOException ex) {
             System.out.println("cannot open the server on port 465");
-        }*/
+        }
 
 
 
