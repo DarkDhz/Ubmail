@@ -72,10 +72,10 @@ public class SMTProtocol {
             this.send("250 OK");
         } else if (opcode.equalsIgnoreCase("QUIT")) {
             this.send("221 Bye");
-            System.out.println(mail.getMail_from());
-            System.out.println(mail.getMailTo());
-            System.out.println(mail.getData());
-            System.out.println(mail.getCredentials());
+            System.out.println("----------------- DATA -----------------");
+            System.out.println(mail.extractMessage());
+            System.out.println("----------------- URLS -----------------");
+            System.out.println(mail.getURLs());
             throw new IOException("close socket");
         } else {
             mail.addData(message);

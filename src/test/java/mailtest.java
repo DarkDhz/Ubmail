@@ -22,7 +22,14 @@ public class mailtest {
         prop.put("mail.smtp.host", "localhost");
         prop.put("mail.smtp.port", "25");
 
-        Message message = new MimeMessage(Session.getDefaultInstance(prop));
+        Session session = Session.getInstance(prop, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("test@gmail.com", "unkopwn1223s");
+            }
+        });
+
+        Message message = new MimeMessage(session);
 
 
         message.setFrom(new InternetAddress("from@gmail.com"));
@@ -37,7 +44,7 @@ public class mailtest {
 
         message.setSubject("Mail Subject");
 
-        String msg = "Esto es un correo de prueba";
+        String msg = "Esto es un correo de prueba \n https://www.hola.com";
 
         MimeBodyPart mimeBodyPart = new MimeBodyPart();
         mimeBodyPart.setContent(msg, "text/html; charset=utf-8");
