@@ -11,6 +11,17 @@ import java.io.IOException;
 public class main {
 
     public static void main(String[] args) {
+        // java location C:\Program Files\Java\jdk1.8.0_301\bin
+
+        // https://docs.oracle.com/cd/E19509-01/820-3503/6nf1il6er/index.html
+        // https://stackoverflow.com/questions/2138574/java-path-to-truststore-set-property-doesnt-work
+        System.setProperty("javax.net.ssl.keyStore", "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\smtp.jks");
+        System.setProperty("javax.net.ssl.trustStore", "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\smtp.jks");
+        System.setProperty("javax.net.ssl.keyStorePassword", "none");
+
+
+
+
         try {
             Proxy proxy = new Proxy("127.0.0.1", 25);
             Thread t = new Thread(proxy);
