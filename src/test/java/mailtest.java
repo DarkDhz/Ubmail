@@ -1,4 +1,5 @@
 import org.junit.Test;
+import sun.net.www.http.HttpClient;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -8,8 +9,15 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Properties;
+
+import static jdk.nashorn.internal.objects.NativeDate.toJSON;
 
 public class mailtest {
 
@@ -140,6 +148,21 @@ public class mailtest {
 
         Transport.send(message);
         //prop.put("mail.smtp.ssl.trust", "smtp.mailtrap.io");
+    }
+
+    @Test
+    public void blacklistcheck() throws IOException, MessagingException {
+        StringBuilder result = new StringBuilder();
+        URL url = new URL("https://www.blacklistmaster.com/restapi/v1/blacklistcheck/domain/sndsllarodgift.casacam.net?apikey=7jL0GedmCBjSBNro5Vcjxy3Udffdg660");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(conn.getInputStream()))) {
+            for (String line; (line = reader.readLine()) != null; ) {
+                result.append(line);
+            }
+        }
+        System.out.println(result.toString());
     }
 
 }

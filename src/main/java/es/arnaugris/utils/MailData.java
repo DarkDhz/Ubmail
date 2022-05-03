@@ -74,6 +74,11 @@ public class MailData {
         this.password = data[2];
     }
 
+    public String checkBlacklist() {
+        BlackListUtils blackListUtils = BlackListUtils.getInstance();
+        return "none";
+    }
+
     public String getCredentials() {
         return "mail: " + this.username + " pass: " + this.password;
     }
