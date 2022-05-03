@@ -1,5 +1,7 @@
 package es.arnaugris.proxy;
 
+import es.arnaugris.utils.ServerUtils;
+
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
@@ -7,13 +9,13 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Proxy implements Runnable{
+public class Proxy extends ServerUtils implements Runnable{
 
     private ServerSocket server;
 
     public Proxy(String host, int port) throws IOException {
         try {
-            server = new ServerSocket(port, 90, InetAddress.getByName(host));
+            server = super.createServerSocket(host, port);
             System.out.println("Server iniciado");
         } catch (IOException e) {
             throw new IOException("Cannot open server");
