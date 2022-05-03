@@ -1,5 +1,6 @@
 package es.arnaugris.utils;
 
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -11,11 +12,14 @@ public class MailData {
     private final ArrayList<Object> data;
     private String username;
     private String password;
+    private String content;
+    private ArrayList<String> urls;
 
 
     public MailData() {
         mail_to = new ArrayList<String>();
         data = new ArrayList<Object>();
+        urls = new ArrayList<String>();
     }
 
     public String getMail_from() {
@@ -42,16 +46,11 @@ public class MailData {
     }
 
     public void addData(String message) {
-        System.out.println(message);
         data.add(message);
     }
 
     public ArrayList<Object> getData() {
         return this.data;
-    }
-
-    public String exportMessage() {
-        return "TODO";
     }
 
     public void auth(String encoded) {
@@ -83,4 +82,49 @@ public class MailData {
         return "mail: " + this.username + " pass: " + this.password;
     }
 
+    public String extractMessage() {
+        //System.out.println(data);
+        String boundary = null;
+        String end_boundary = null;
+        boolean reading = false;
+        String message = "";
+
+        for (Object line : data) {
+            if (line instanceof String) {
+                String line_string = (String) line;
+                if (boundary != null) {
+                    if (reading) {
+                        if (line_string.contains(end_boundary)) {
+                            reading = false;
+                        } else {
+                            extractURL(line_string);
+                            message = message + line_string + "\n";
+                        }
+                    } else {
+                        if (line_string.contains(boundary)) {
+                            reading = true;
+                        }
+                    }
+                } else if (line_string.contains("boundary")) {
+                    boundary = line_string.split("boundary=")[1].replaceAll("\"", "");
+                    end_boundary = boundary + "--";
+                }
+            }
+        }
+        this.content = message;
+        return message;
+    }
+
+    public ArrayList<String> getURLs() {
+        return this.urls;
+    }
+
+    private void extractURL(String line) {
+        for (String word : line.split(" ")) {
+            try {
+                URL url = new URL(word);
+                urls.add(word);
+            } catch (Exception ignored) {}
+        }
+    }
 }
