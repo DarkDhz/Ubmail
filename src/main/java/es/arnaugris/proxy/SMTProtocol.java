@@ -76,6 +76,8 @@ public class SMTProtocol {
             System.out.println(mail.extractMessage());
             System.out.println("----------------- URLS -----------------");
             System.out.println(mail.getURLs());
+            System.out.println("----------------- BLACKLIST -----------------");
+            System.out.println(mail.checkBlacklist());
             throw new IOException("close socket");
         } else {
             mail.addData(message);

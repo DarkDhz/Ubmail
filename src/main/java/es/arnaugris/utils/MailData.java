@@ -1,5 +1,6 @@
 package es.arnaugris.utils;
 
+import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -73,9 +74,23 @@ public class MailData {
         this.password = data[2];
     }
 
-    public String checkBlacklist() {
+    public int checkBlacklist() {
         BlackListUtils blackListUtils = BlackListUtils.getInstance();
-        return "none";
+        for (String uri : this.urls) {
+            String domain = extractDomain(uri);
+            try {
+                blackListUtils.checkDomain(domain);
+            } catch (IOException e) {
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    private String extractDomain(String url) {
+        String uri = url.split("//")[1];
+        uri = uri.split("/")[0];
+        return uri;
     }
 
     public String getCredentials() {

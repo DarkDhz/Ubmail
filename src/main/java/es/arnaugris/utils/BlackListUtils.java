@@ -30,7 +30,7 @@ public class BlackListUtils {
         return "https://www.blacklistmaster.com/restapi/v1/blacklistcheck/domain/" + domain + "?apikey=" + this.api_key;
     }
 
-    public int checkURL(String domain) throws IOException {
+    public int checkDomain(String domain) throws IOException {
 
         StringBuilder result = new StringBuilder();
 
