@@ -15,9 +15,9 @@ public class main {
 
         // https://docs.oracle.com/cd/E19509-01/820-3503/6nf1il6er/index.html
         // https://stackoverflow.com/questions/2138574/java-path-to-truststore-set-property-doesnt-work
-        System.setProperty("javax.net.ssl.keyStore", "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\smtp.jks");
-        System.setProperty("javax.net.ssl.trustStore", "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\smtp.jks");
-        System.setProperty("javax.net.ssl.keyStorePassword", "none");
+        System.setProperty("javax.net.ssl.keyStore", "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\smtp");
+        //System.setProperty("javax.net.ssl.trustStore", "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\smtp.jks");
+        System.setProperty("javax.net.ssl.keyStorePassword", "password");
 
 
 
