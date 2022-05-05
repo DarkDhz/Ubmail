@@ -16,25 +16,38 @@ public class MailData {
     private String content;
     private ArrayList<String> urls;
 
-
+    /**
+     * Default class builder
+     */
     public MailData() {
         mail_to = new ArrayList<String>();
         data = new ArrayList<Object>();
         urls = new ArrayList<String>();
     }
 
+    /**
+     * Obtain sender of mail
+     * @return sender of mail
+     */
     public String getMail_from() {
         return mail_from;
     }
 
+    /**
+     * Method to get the sender of mail
+     * @param message SMTP message line
+     */
     public void clearAndSetMail_from(String message) {
         String result = message.replaceAll("MAIL FROM:", "");
         result = result.replaceAll(">", "");
         result = result.replaceAll("<", "");
         this.mail_from = result;
-
     }
 
+    /**
+     * Method to get receivers of the mail
+     * @param message SMTP message line
+     */
     public void clearAndAddMail_to(String message) {
         String result = message.replaceAll("RCPT TO:", "");
         result = result.replaceAll(">", "");
@@ -42,18 +55,34 @@ public class MailData {
         mail_to.add(result);
     }
 
+    /**
+     * Method to get receivers of the mail
+     * @return ArrayList with all the receivers
+     */
     public ArrayList<String> getMailTo() {
         return this.mail_to;
     }
 
+    /**
+     * Method to add body message
+     * @param message SMTP message line
+     */
     public void addData(String message) {
         data.add(message);
     }
 
+    /**
+     * Method to get the body of the mail (message)
+     * @return List of message lines
+     */
     public ArrayList<Object> getData() {
         return this.data;
     }
 
+    /**
+     * Method to decode auth in base64
+     * @param encoded encoded base64 SMTP auth message;
+     */
     public void auth(String encoded) {
         encoded = encoded.replaceAll("AUTH PLAIN ", "");
 
@@ -74,31 +103,47 @@ public class MailData {
         this.password = data[2];
     }
 
-    public int checkBlacklist() {
+    /**
+     * Method to check if mail is dangerous
+     * @return True if dangerous, False otherwise
+     */
+    public boolean checkBlacklist() throws IOException {
         BlackListUtils blackListUtils = BlackListUtils.getInstance();
         for (String uri : this.urls) {
             String domain = extractDomain(uri);
             try {
                 blackListUtils.checkDomain(domain);
             } catch (IOException e) {
-                return -1;
+                throw new IOException("Canno't check the url");
             }
         }
-        return -1;
+        return false;
     }
 
+    /**
+     * Method to extract domain from an URL
+     * @param url The URL
+     * @return The domain of the URL
+     */
     private String extractDomain(String url) {
         String uri = url.split("//")[1];
         uri = uri.split("/")[0];
         return uri;
     }
 
+    /**
+     * Method to get the auth credentials
+     * @return auth credentials
+     */
     public String getCredentials() {
         return "mail: " + this.username + " pass: " + this.password;
     }
 
+    /**
+     * Method to get the boundary and then extract the mail message
+     * @return The mail message
+     */
     public String extractMessage() {
-        //System.out.println(data);
         String boundary = null;
         String end_boundary = null;
         boolean reading = false;
@@ -130,10 +175,18 @@ public class MailData {
         return message;
     }
 
+    /**
+     * Method to get the URL's
+     * @return ArrayList of URL's
+     */
     public ArrayList<String> getURLs() {
         return this.urls;
     }
 
+    /**
+     * Method to extract URL's from messages
+     * @param line Line to check
+     */
     private void extractURL(String line) {
         for (String word : line.split(" ")) {
             try {
