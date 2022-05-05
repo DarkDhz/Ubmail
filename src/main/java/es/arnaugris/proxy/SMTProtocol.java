@@ -12,6 +12,7 @@ public class SMTProtocol {
     private final BufferedReader in;
     private final BufferedWriter out;
     private final MailData mail;
+    private boolean Ehlo = false;
 
     public SMTProtocol(BufferedReader reader, BufferedWriter writer) {
         this.in = reader;
@@ -41,6 +42,9 @@ public class SMTProtocol {
         String opcode = split_message(message);
 
         if (opcode.equalsIgnoreCase("EHLO")) {
+            if (this.Ehlo) {
+                mail.clear();
+            }
             //this.send("250 ubmail");
 
             /*//USE TLS
@@ -54,7 +58,11 @@ public class SMTProtocol {
 
             this.send("250-smtp.example.com Hello client.example.com");
             this.send("250 AUTH GSSAPI DIGEST-MD5 PLAIN");
-
+            this.Ehlo = true;
+        } else if (!this.Ehlo) {
+            this.send("503 Invalid secuence of commands");
+        } else if (opcode.equalsIgnoreCase("VRFY")) {
+            this.send("250 OK");
         } else if (opcode.equalsIgnoreCase("STARTTLS")) {
             this.send("220 TLS go ahead");
         } else if (opcode.equalsIgnoreCase("AUTH")) {
@@ -66,6 +74,11 @@ public class SMTProtocol {
         } else if (opcode.equalsIgnoreCase("RCPT")) {
             this.send("250 OK");
             mail.clearAndAddMail_to(message);
+        } else if (opcode.equalsIgnoreCase("RSET")) {
+            this.send("250 OK");
+            mail.clear();
+        } else if (opcode.equalsIgnoreCase("NOOP")) {
+            this.send("250 OK");
         } else if (opcode.equalsIgnoreCase("DATA")) {
             this.send("354 OK");
         } else if (opcode.equalsIgnoreCase(".")) {

@@ -195,4 +195,14 @@ public class MailData {
             } catch (Exception ignored) {}
         }
     }
+
+    public void clear() {
+        mail_from = "";
+        mail_to.clear();
+        data.clear();
+        username = "";
+        password = "";
+        content = "";
+        urls.clear();
+    }
 }
