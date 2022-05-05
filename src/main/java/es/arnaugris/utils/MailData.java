@@ -5,6 +5,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MailData {
 
@@ -15,6 +17,8 @@ public class MailData {
     private String password;
     private String content;
     private ArrayList<String> urls;
+    private Map<String, Boolean> blacklist;
+    private Map<String, Boolean> shorten;
 
     /**
      * Default class builder
@@ -23,6 +27,8 @@ public class MailData {
         mail_to = new ArrayList<String>();
         data = new ArrayList<Object>();
         urls = new ArrayList<String>();
+        shorten = new HashMap<>();
+        blacklist = new HashMap<>();
     }
 
     /**
@@ -107,19 +113,73 @@ public class MailData {
      * Method to check if mail is dangerous
      * @return True if dangerous, False otherwise
      */
-    public boolean checkBlacklist() throws IOException {
+    public void checkBlacklist() {
         BlackListUtils blackListUtils = BlackListUtils.getInstance();
         for (String uri : this.urls) {
             String domain = extractDomain(uri);
             try {
                 blackListUtils.checkDomain(domain);
             } catch (IOException e) {
-                throw new IOException("Canno't check the url");
+                this.blacklist.put(uri, null);
             }
         }
-        return false;
     }
 
+    /**
+     * Check if any URL has been shortened
+     */
+    public void checkShortenURLService() {
+        BlackListUtils blackListUtils = BlackListUtils.getInstance();
+        this.shorten.clear();
+        for (String uri : this.urls) {
+           this.shorten.put(uri, blackListUtils.checkShorteneer(uri));
+        }
+    }
+
+    /**
+     * Check all options
+     */
+    public void checkAll() {
+        this.shorten.clear();
+        this.blacklist.clear();
+        BlackListUtils blackListUtils = BlackListUtils.getInstance();
+
+        for (String uri : this.urls) {
+            this.shorten.put(uri, blackListUtils.checkShorteneer(uri));
+            Map<String, String> result = convertBlacklistToMap("{\"status\":\"Not blacklisted\",\"blacklist_cnt\":0,\"blacklist_severity\":\"\",\"API_calls_remaining\":186,\"response\":\"OK\",\"blacklists\":[]}");
+            System.out.println(result);
+            String domain = extractDomain(uri);
+            /*try {
+                blackListUtils.checkDomain(domain);
+            } catch (IOException e) {
+               this.blacklist.put(uri, null);
+            }*/
+        }
+
+    }
+
+    // change to string to JSON TODO
+    private Map<String, String> convertBlacklistToMap(String message) {
+        System.out.println(message);
+        message = message.substring(1, message.length()-1);
+        String[] keyValuePairs = message.split(",");
+        Map<String,String> map = new HashMap<>();
+
+        for(String pair : keyValuePairs) {
+            String[] entry = pair.split(":");
+            map.put(entry[0].trim(), entry[1].trim());
+        }
+
+        return map;
+    }
+
+    public Map<String, Boolean> getBlacklist() {
+        return this.blacklist;
+    }
+
+    public Map<String, Boolean> getShorten() {
+        return this.shorten;
+    }
     /**
      * Method to extract domain from an URL
      * @param url The URL

@@ -41,7 +41,7 @@ public class SMTProtocol {
     private void response(String message) throws IOException {
         // TODO TIMEOUT (5 minutes)
         String opcode = split_message(message);
-        System.out.println(message);
+
         if (opcode.equalsIgnoreCase("EHLO")) {
             if (this.Ehlo) {
                 mail.clear();
@@ -77,12 +77,20 @@ public class SMTProtocol {
             this.send("250 OK");
         } else if (opcode.equalsIgnoreCase("QUIT")) {
             this.send("221 Bye");
+            // do the checks
+
             System.out.println("----------------- DATA -----------------");
             System.out.println(mail.extractMessage());
             System.out.println("----------------- URLS -----------------");
             System.out.println(mail.getURLs());
+
+            // do the checks
+            mail.checkAll();
+
             System.out.println("----------------- BLACKLIST -----------------");
-            System.out.println(mail.checkBlacklist());
+            System.out.println(mail.getBlacklist());
+            System.out.println("----------------- SHORTEN -----------------");
+            System.out.println(mail.getShorten());
             throw new IOException("close socket");
         } else {
             mail.addData(message);
