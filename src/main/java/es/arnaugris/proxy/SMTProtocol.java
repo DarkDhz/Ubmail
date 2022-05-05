@@ -39,22 +39,14 @@ public class SMTProtocol {
     private String split_message(String message) { return message.split(" ")[0]; }
 
     private void response(String message) throws IOException {
+        // TODO TIMEOUT (5 minutes)
         String opcode = split_message(message);
-
+        System.out.println(message);
         if (opcode.equalsIgnoreCase("EHLO")) {
             if (this.Ehlo) {
                 mail.clear();
             }
             //this.send("250 ubmail");
-
-            /*//USE TLS
-            this.send("250-smtp.server.com");
-            this.send("250-SIZE 52428800");
-            this.send("250-8BITMIME");
-            this.send("250-PIPELINING");
-            this.send("250-STARTTLS");
-            this.send("250 HELP");
-            */
 
             this.send("250-smtp.example.com Hello client.example.com");
             this.send("250 AUTH GSSAPI DIGEST-MD5 PLAIN");
