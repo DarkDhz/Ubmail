@@ -71,4 +71,41 @@ public class BlackListUtils {
         // TODO
         return true;
     }
+
+    public boolean checkShorteneer(String url) {
+        if (url.contains("goo.gl")) {
+            return true;
+        }
+        if (url.contains("tinyurl.com")) {
+            return true;
+        }
+        if (url.contains("bit.ly")) {
+            return true;
+        }
+        if (url.contains("ow.ly")) {
+            return true;
+        }
+        if (url.contains("is.gd")) {
+            return true;
+        }
+        if (url.contains("buff.ly")) {
+            return true;
+        }
+        if (url.contains("adf.ly")) {
+            return true;
+        }
+        if (url.contains("bit.do")) {
+            return true;
+        }
+        if (url.contains("mcaf.ee")) {
+            return true;
+        }
+        if (url.contains("rebrand.ly")) {
+            return true;
+        }
+        if (url.contains("su.pr")) {
+            return true;
+        }
+        return false;
+    }
 }
