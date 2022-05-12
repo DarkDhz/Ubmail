@@ -89,15 +89,35 @@ public class SMTProtocol {
             mail.checkAll();
 
             System.out.println("----------------- BLACKLIST -----------------");
-            System.out.println(mail.getBlacklist());
+
+            Map<String, Boolean> black_list = mail.getBlacklist();
+
+            for (Map.Entry<String, Boolean> entry : black_list.entrySet()) {
+                if (entry.getValue()) {
+                    System.out.println("URL " + entry.getKey() + " is inside a blacklist!");
+                }
+            }
+
             System.out.println("----------------- SIMILAR -----------------");
+
             Map<String, String> similar = mail.getSimilarityDomains();
+
             for (Map.Entry<String, String> entry : similar.entrySet()) {
                 System.out.println("" + entry.getKey() + " similar to " + entry.getValue());
             }
 
             System.out.println("----------------- SHORTEN -----------------");
-            System.out.println(mail.getShorten());
+
+            Map<String, Boolean> shorten = mail.getShorten();
+
+            System.out.println("SHORTEN URL CAN BE DANGEROUS!");
+
+            for (Map.Entry<String, Boolean> entry : shorten.entrySet()) {
+                if (entry.getValue()) {
+                    System.out.println("URL " + entry.getKey() + " is using URL-SHORTEN service.");
+                }
+            }
+
             throw new IOException("close socket");
         } else {
             mail.addData(message);
