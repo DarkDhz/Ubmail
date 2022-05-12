@@ -184,7 +184,6 @@ public class MailData {
 
     // change to string to JSON TODO
     private Map<String, String> convertBlacklistToMap(String message) {
-        System.out.println(message);
         message = message.substring(1, message.length()-1);
         String[] keyValuePairs = message.split(",");
         Map<String,String> map = new HashMap<>();
