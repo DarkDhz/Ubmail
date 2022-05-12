@@ -6,6 +6,7 @@ import es.arnaugris.utils.MailData;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Map;
 
 public class SMTProtocol {
 
@@ -89,6 +90,12 @@ public class SMTProtocol {
 
             System.out.println("----------------- BLACKLIST -----------------");
             System.out.println(mail.getBlacklist());
+            System.out.println("----------------- SIMILAR -----------------");
+            Map<String, String> similar = mail.getSimilarityDomains();
+            for (Map.Entry<String, String> entry : similar.entrySet()) {
+                System.out.println("" + entry.getKey() + " similar to " + entry.getValue());
+            }
+
             System.out.println("----------------- SHORTEN -----------------");
             System.out.println(mail.getShorten());
             throw new IOException("close socket");

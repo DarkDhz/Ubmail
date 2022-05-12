@@ -17,6 +17,10 @@ public class BlackListUtils {
     // www.blacklistmaster.com
     private String api_key = "7jL0GedmCBjSBNro5Vcjxy3Udffdg660";
 
+    private BlackListUtils() {
+
+    }
+
     /**
      * Method to get class instance
      * @return The BlackListUtils instance object

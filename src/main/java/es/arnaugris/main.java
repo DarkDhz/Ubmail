@@ -1,5 +1,6 @@
 package es.arnaugris;
 
+import es.arnaugris.external.DomainList;
 import es.arnaugris.proxy.Proxy;
 import es.arnaugris.sslproxy.SSLProxy;
 
@@ -19,8 +20,8 @@ public class main {
         //System.setProperty("javax.net.ssl.trustStore", "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\smtp.jks");
         //System.setProperty("javax.net.ssl.keyStorePassword", "password");
 
-
-
+        DomainList domains = DomainList.getInstance();
+        domains.loadDomain();
 
         try {
             Proxy proxy = new Proxy("127.0.0.1", 25);

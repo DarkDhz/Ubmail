@@ -52,7 +52,7 @@ public class mailtest {
 
         message.setSubject("Mail Subject");
 
-        String msg = "Esto es un correo de prueba \n https://www.hola.com/cosas";
+        String msg = "Esto es un correo de prueba \n https://www.ub.edu/cosas \n https://www.ubay.edu/cosas \n https://www.ub.com/cosas \n https://www.universitat.edu/cosas";
 
         MimeBodyPart mimeBodyPart = new MimeBodyPart();
         mimeBodyPart.setContent(msg, "text/html; charset=utf-8");

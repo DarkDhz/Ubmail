@@ -1,5 +1,7 @@
 package es.arnaugris.utils;
 
+import es.arnaugris.external.DomainList;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -19,6 +21,7 @@ public class MailData {
     private ArrayList<String> urls;
     private Map<String, Boolean> blacklist;
     private Map<String, Boolean> shorten;
+    private Map<String, String> similar;
 
     /**
      * Default class builder
@@ -29,6 +32,7 @@ public class MailData {
         urls = new ArrayList<String>();
         shorten = new HashMap<>();
         blacklist = new HashMap<>();
+        similar = new HashMap<>();
     }
 
     /**
@@ -140,20 +144,40 @@ public class MailData {
      * Check all options
      */
     public void checkAll() {
+        this.similar.clear();
         this.shorten.clear();
         this.blacklist.clear();
+
         BlackListUtils blackListUtils = BlackListUtils.getInstance();
+        Levenshtein lev = Levenshtein.getInstance();
+        DomainList domains = DomainList.getInstance();
 
         for (String uri : this.urls) {
             this.shorten.put(uri, blackListUtils.checkShorteneer(uri));
             Map<String, String> result = convertBlacklistToMap("{\"status\":\"Not blacklisted\",\"blacklist_cnt\":0,\"blacklist_severity\":\"\",\"API_calls_remaining\":186,\"response\":\"OK\",\"blacklists\":[]}");
-            System.out.println(result);
+
             String domain = extractDomain(uri);
             /*try {
                 blackListUtils.checkDomain(domain);
             } catch (IOException e) {
                this.blacklist.put(uri, null);
             }*/
+
+            int min_distance = 999999999;
+
+            String most_similar = "None";
+
+            for (String check : domains.getList()) {
+
+                int distance = lev.levenshtein(check, domain, false);
+
+                if ((distance < min_distance) && (distance != 0 ) && (distance < 10)) {
+                    most_similar = check;
+                }
+            }
+
+            similar.put(domain, most_similar);
+
         }
 
     }
@@ -265,4 +289,37 @@ public class MailData {
         content = "";
         urls.clear();
     }
+
+    public void checkDomainDistance() {
+        this.similar.clear();
+
+        Levenshtein lev = Levenshtein.getInstance();
+        DomainList domains = DomainList.getInstance();
+
+        for (String url : this.urls) {
+            url = extractDomain(url);
+
+            int min_distance = 999999999;
+
+            String most_similar = "None";
+
+            for (String domain : domains.getList()) {
+
+                int distance = lev.levenshtein(domain, url, false);
+
+                if ((distance < min_distance) && (distance != 0 ) && (distance < 10)) {
+                    most_similar = domain;
+                }
+            }
+
+            similar.put(url, most_similar);
+
+        }
+    }
+
+    public Map<String, String> getSimilarityDomains() {
+        return this.similar;
+    }
+
+
 }
