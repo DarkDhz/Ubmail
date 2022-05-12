@@ -150,7 +150,7 @@ public class MailData {
 
         BlackListUtils blackListUtils = BlackListUtils.getInstance();
         Levenshtein lev = Levenshtein.getInstance();
-        DomainList domains = DomainList.getInstance();
+        DomainList domainList = DomainList.getInstance();
 
         for (String uri : this.urls) {
             this.shorten.put(uri, blackListUtils.checkShorteneer(uri));
@@ -167,11 +167,11 @@ public class MailData {
 
             String most_similar = "None";
 
-            for (String check : domains.getList()) {
+            for (String check : domainList.getList()) {
 
-                int distance = lev.levenshtein(check, domain, false);
+                int distance = lev.levenshtein(check, domain);
 
-                if ((distance < min_distance) && (distance != 0 ) && (distance < 10)) {
+                if ((distance < min_distance) && (distance != 0 ) && (distance < domainList.getSensitive())) {
                     most_similar = check;
                 }
             }
@@ -304,7 +304,7 @@ public class MailData {
 
             for (String domain : domains.getList()) {
 
-                int distance = lev.levenshtein(domain, url, false);
+                int distance = lev.levenshtein(domain, url);
 
                 if ((distance < min_distance) && (distance != 0 ) && (distance < 10)) {
                     most_similar = domain;

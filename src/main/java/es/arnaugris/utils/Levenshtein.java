@@ -21,22 +21,9 @@ public class Levenshtein {
         return instance;
     }
 
-    /**
-     * Calculate the Levenshtein distance between two strings. Basically, the number of
-     * changes that need to be made to convert one string into another. Very useful when
-     * determining string similarties.
-     * @param stringOne
-     * @param stringTwo
-     * @param caseSensitive Should differences in case be treated as changes.
-     * @return The Levenshtein distance
-     */
-    public int levenshtein(String stringOne, String stringTwo, boolean caseSensitive) {
-        // if we want to ignore case sensitivity, lower case the strings
-        if(!caseSensitive)
-        {
-            stringOne = stringOne.toLowerCase();
-            stringTwo = stringTwo.toLowerCase();
-        }
+    public int levenshtein(String stringOne, String stringTwo) {
+        stringOne = stringOne.toLowerCase();
+        stringTwo = stringTwo.toLowerCase();
 
         // store length
         int m = stringOne.length();

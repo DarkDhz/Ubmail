@@ -1,0 +1,6 @@
+domain_check:
+  sensitive: 0
+  domains:
+    - "ub.edu"
+    - "campusvirtual.ub.edu"
+    - "www.ub.edu"

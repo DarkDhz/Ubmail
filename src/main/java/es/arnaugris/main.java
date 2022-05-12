@@ -21,9 +21,10 @@ public class main {
         //System.setProperty("javax.net.ssl.keyStorePassword", "password");
 
         DomainList domains = DomainList.getInstance();
-        domains.loadDomain();
+
 
         try {
+            domains.load();
             Proxy proxy = new Proxy("127.0.0.1", 25);
             Thread t = new Thread(proxy);
             t.start();
