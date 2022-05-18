@@ -51,7 +51,7 @@ public class SSLSMTProtocol extends SocketUtils {
                 this.send("250 ubmail");
             } else {
                 //USE TLS
-                this.send("250-smtp.server.com");
+                this.send("250-smtp.arnaugris.es Hello client");
                 this.send("250-SIZE 52428800");
                 this.send("250-8BITMIME");
                 this.send("250-PIPELINING");

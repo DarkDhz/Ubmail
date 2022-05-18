@@ -49,7 +49,7 @@ public class SMTProtocol {
             }
             //this.send("250 ubmail");
 
-            this.send("250-smtp.example.com Hello client.example.com");
+            this.send("250-smtp.arnaugris.es Hello client");
             this.send("250 AUTH GSSAPI DIGEST-MD5 PLAIN");
             this.Ehlo = true;
         } else if (!this.Ehlo) {
