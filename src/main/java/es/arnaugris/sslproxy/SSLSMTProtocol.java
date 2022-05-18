@@ -68,6 +68,7 @@ public class SSLSMTProtocol extends SocketUtils {
             s.startHandshake();
 
             socket = s;
+
             reset = true;
             //sess.setTlsStarted(true);
 

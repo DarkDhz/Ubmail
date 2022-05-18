@@ -15,6 +15,9 @@ public class SocketUtils {
         SSLSocket s = (SSLSocket) (sf.createSocket(socket, remoteAddress.getHostName(), socket.getPort(), true));
 
         s.setUseClientMode(false);
+
+        //s.setEnabledProtocols(new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"});
+
         s.setEnabledCipherSuites(s.getSupportedCipherSuites());
 
         return s;

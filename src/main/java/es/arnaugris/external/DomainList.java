@@ -1,11 +1,6 @@
 package es.arnaugris.external;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import es.arnaugris.utils.BlackListUtils;
 import org.yaml.snakeyaml.Yaml;
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;

@@ -112,6 +112,9 @@ public class mailtest {
 
     @Test
     public void testwithSSL() throws IOException, MessagingException {
+        System.setProperty("javax.net.ssl.trustStore", "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\ubmail_trust.jts");
+        System.setProperty("javax.net.ssl.trustStorePassword", "ubmail");
+
         Properties prop = new Properties();
 
         prop.put("mail.smtp.host", "localhost");
