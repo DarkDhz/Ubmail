@@ -21,13 +21,13 @@ public class Levenshtein {
         return instance;
     }
 
-    public int levenshtein(String stringOne, String stringTwo) {
-        stringOne = stringOne.toLowerCase();
-        stringTwo = stringTwo.toLowerCase();
+    public int levenshtein(String original, String toCompare) {
+        original = original.toLowerCase();
+        toCompare = toCompare.toLowerCase();
 
         // store length
-        int m = stringOne.length();
-        int n = stringTwo.length();
+        int m = original.length();
+        int n = toCompare.length();
 
         // matrix to store differences
         int[][] deltaM = new int[m+1][n+1];
@@ -46,7 +46,7 @@ public class Levenshtein {
         {
             for(int i=1;i<=m;i++)
             {
-                if(stringOne.charAt(i-1) == stringTwo.charAt(j-1))
+                if(original.charAt(i-1) == toCompare.charAt(j-1))
                 {
                     deltaM[i][j] = deltaM[i-1][j-1];
                 }
