@@ -1,6 +1,7 @@
 package es.arnaugris;
 
 import es.arnaugris.external.DomainList;
+import es.arnaugris.external.ServerYaml;
 import es.arnaugris.proxy.Proxy;
 import es.arnaugris.sslproxy.SSLProxy;
 
@@ -13,27 +14,30 @@ import java.util.concurrent.ExecutionException;
 
 public class main {
 
-    public static void main(String[] args) {
-        // java location C:\Program Files\Java\jdk1.8.0_301\bin
+    // mvn compile
+    // mvn exec:java -Dexec.mainClass=es.arnaugris.main
 
-        // https://docs.oracle.com/cd/E19509-01/820-3503/6nf1il6er/index.html
-        // https://stackoverflow.com/questions/2138574/java-path-to-truststore-set-property-doesnt-work
+    public static void main(String[] args) {
         System.setProperty("javax.net.ssl.keyStore", "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\ubmail.jks");
         //System.setProperty("javax.net.ssl.trustStore", "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\ubmail_trust.jts");
         //System.setProperty("javax.net.ssl.trustStorePassword", "ubmail");
         System.setProperty("javax.net.ssl.keyStorePassword", "ubmail");
         //System.setProperty("javax.net.debug", "all");
 
-        DomainList domains = DomainList.getInstance();
+        ServerYaml server = null;
 
         try {
+            DomainList domains = DomainList.getInstance();
+            server = ServerYaml.getInstance();
             domains.load();
         } catch (FileNotFoundException ex) {
             System.out.printf("Domains can't be loaded");
+            System.exit(0);
         }
 
+
         try {
-            Proxy proxy = new Proxy("127.0.0.1", 25);
+            Proxy proxy = new Proxy(server.getIP(), server.getPort());
             Thread t = new Thread(proxy);
             t.start();
         } catch (IOException ex) {
@@ -43,7 +47,7 @@ public class main {
 
 
         try {
-            SSLProxy sslProxy = new SSLProxy("127.0.0.1", 465);
+            SSLProxy sslProxy = new SSLProxy(server.getIP(), server.getSSlPort());
             Thread t2 = new Thread(sslProxy);
             t2.start();
         } catch (IOException ex) {

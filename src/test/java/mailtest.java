@@ -21,13 +21,15 @@ import static jdk.nashorn.internal.objects.NativeDate.toJSON;
 
 public class mailtest {
 
+    private final String host = "localhost";
+
     @Test
     public void test() throws IOException, MessagingException {
         Properties prop = new Properties();
         prop.put("mail.smtp.auth", true);
         prop.put("mail.smtp.starttls.enable", "true");
         //prop.put("mail.smtp.ssl.enable", "true");
-        prop.put("mail.smtp.host", "localhost");
+        prop.put("mail.smtp.host", host);
         prop.put("mail.smtp.port", "25");
 
         Session session = Session.getInstance(prop, new Authenticator() {
@@ -73,7 +75,7 @@ public class mailtest {
         Properties prop = new Properties();
         prop.put("mail.smtp.auth", true);
         prop.put("mail.smtp.starttls.enable", "true");
-        prop.put("mail.smtp.host", "localhost");
+        prop.put("mail.smtp.host", host);
         prop.put("mail.smtp.port", "25");
         prop.put("mail.smtp.ssl.trust", "localhost");
 
@@ -119,7 +121,7 @@ public class mailtest {
 
         Properties prop = new Properties();
 
-        prop.put("mail.smtp.host", "localhost");
+        prop.put("mail.smtp.host", host);
         prop.put("mail.smtp.port", "465");
         prop.put("mail.smtp.auth", "true");
         prop.put("mail.smtp.starttls.enable", "true");

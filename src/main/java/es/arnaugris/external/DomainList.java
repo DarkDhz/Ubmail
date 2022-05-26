@@ -16,14 +16,12 @@ public class DomainList {
     private int sensitive = 0;
 
 
+
+
     private DomainList() {
         domains = new ArrayList<>();
     }
 
-    /**
-     * Method to get class instance
-     * @return The BlackListUtils instance object
-     */
     public static DomainList getInstance() {
         // To ensure only one instance is created
         if (instance == null) {
@@ -34,16 +32,6 @@ public class DomainList {
             }
         }
         return instance;
-    }
-
-
-    public void addDomain(String dom) {
-        synchronized (DomainList.class) {
-            if (!this.domains.contains(dom)) {
-                this.domains.add(dom);
-            }
-        }
-
     }
 
     public ArrayList<String> getList() {
@@ -60,9 +48,14 @@ public class DomainList {
 
         this.sensitive = (int) info.get("sensitive");
         this.domains = (ArrayList<String>) info.get("domains");
+
+        Map<String, Object> server = (Map<String, Object>) data.get("server");
+
     }
 
     public int getSensitive() {
         return this.sensitive;
     }
+
+
 }

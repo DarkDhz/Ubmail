@@ -98,7 +98,7 @@ public class SSLSMTProtocol extends SocketUtils {
             this.send("250 OK");
         } else if (opcode.equalsIgnoreCase("QUIT")) {
             this.send("221 Bye");
-            System.out.println(mail.getMail_from());
+            System.out.println(mail.getMailFrom());
             System.out.println(mail.getMailTo());
             System.out.println(mail.getData());
             throw new IOException("close socket");

@@ -1,5 +1,6 @@
 package es.arnaugris.utils;
 
+import com.hp.gagawa.java.elements.Div;
 import es.arnaugris.external.DomainList;
 
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class MailData {
      * Obtain sender of mail
      * @return sender of mail
      */
-    public String getMail_from() {
+    public String getMailFrom() {
         return mail_from;
     }
 
@@ -335,6 +336,53 @@ public class MailData {
 
     public Map<String, String> getSimilarityDomains() {
         return this.similar;
+    }
+
+    public String getReport() {
+
+        this.extractMessage();
+        this.checkAll();
+
+        //Div div = new Div();
+
+        StringBuilder toReturn = new StringBuilder("<h4>REPORT FROM <a style=\"color: green;\"> ANTI PHISHING AG.ES </a>\n</h4>");
+
+        toReturn.append("<p>----------------- URLS -----------------\n");
+        toReturn.append(this.getURLs().toString());
+        toReturn.append("\n</p>");
+
+        toReturn.append("<p>----------------- BLACKLIST -----------------\n");
+
+        Map<String, Boolean> black_list = this.getBlacklist();
+
+        for (Map.Entry<String, Boolean> entry : black_list.entrySet()) {
+            if (entry.getValue()) {
+                toReturn.append("URL ").append(entry.getKey()).append(" is inside a blacklist!\n");
+            }
+        }
+        toReturn.append("\n</p>");
+
+        toReturn.append("<p>----------------- SIMILAR -----------------\n");
+
+        Map<String, String> similar = this.getSimilarityDomains();
+
+        for (Map.Entry<String, String> entry : similar.entrySet()) {
+            toReturn.append(entry.getKey()).append(" similar to ").append(entry.getValue()).append("\n");
+        }
+        toReturn.append("\n</p>");
+
+        toReturn.append("<p>----------------- SHORTEN -----------------");
+
+        Map<String, Boolean> shorten = this.getShorten();
+
+        for (Map.Entry<String, Boolean> entry : shorten.entrySet()) {
+            if (entry.getValue()) {
+                toReturn.append("URL ").append(entry.getKey()).append(" is using URL-SHORTEN service.\n");
+            }
+        }
+        toReturn.append("\n</p>");
+
+        return toReturn.toString();
     }
 
 

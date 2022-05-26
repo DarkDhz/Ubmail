@@ -3,10 +3,16 @@ package es.arnaugris.proxy;
 
 import es.arnaugris.utils.MailData;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.naming.NamingException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Map;
+import java.util.Properties;
 
 public class SMTProtocol {
 
@@ -56,8 +62,9 @@ public class SMTProtocol {
             this.send("503 Invalid secuence of commands");
         } else if (opcode.equalsIgnoreCase("VRFY")) {
             this.send("250 OK");
-        } else if (opcode.equalsIgnoreCase("STARTTLS")) {
-            this.send("220 TLS go ahead");
+            // smtp protocol without encryption
+        //} else if (opcode.equalsIgnoreCase("STARTTLS")) {
+        //    this.send("220 TLS go ahead");
         } else if (opcode.equalsIgnoreCase("AUTH")) {
             mail.auth(message);
             this.send("235 2.7.0 Authentication successful");
@@ -79,43 +86,11 @@ public class SMTProtocol {
         } else if (opcode.equalsIgnoreCase("QUIT")) {
             this.send("221 Bye");
             // do the checks
-
-            System.out.println("----------------- DATA -----------------");
-            System.out.println(mail.extractMessage());
-            System.out.println("----------------- URLS -----------------");
-            System.out.println(mail.getURLs());
-
-            // do the checks
-            mail.checkAll();
-
-            System.out.println("----------------- BLACKLIST -----------------");
-
-            Map<String, Boolean> black_list = mail.getBlacklist();
-
-            for (Map.Entry<String, Boolean> entry : black_list.entrySet()) {
-                if (entry.getValue()) {
-                    System.out.println("URL " + entry.getKey() + " is inside a blacklist!");
-                }
-            }
-
-            System.out.println("----------------- SIMILAR -----------------");
-
-            Map<String, String> similar = mail.getSimilarityDomains();
-
-            for (Map.Entry<String, String> entry : similar.entrySet()) {
-                System.out.println("" + entry.getKey() + " similar to " + entry.getValue());
-            }
-
-            System.out.println("----------------- SHORTEN -----------------");
-
-            Map<String, Boolean> shorten = mail.getShorten();
-
-            System.out.println("SHORTEN URL CAN BE DANGEROUS!");
-
-            for (Map.Entry<String, Boolean> entry : shorten.entrySet()) {
-                if (entry.getValue()) {
-                    System.out.println("URL " + entry.getKey() + " is using URL-SHORTEN service.");
-                }
+            try {
+                System.out.println("MAIL RECIEVED FROM " + mail.getMailFrom());
+                performPostMail();
+            } catch (Exception ignored) {
+                System.out.println(ignored.getMessage());
             }
 
             throw new IOException("close socket");
@@ -124,6 +99,53 @@ public class SMTProtocol {
         }
     }
 
+    private void performPostMail() throws NamingException, MessagingException {
+        String report = this.mail.getReport();
+
+        //MXHelper mxHelper = MXHelper.getInstance();
+        //String[] mx_info = mxHelper.lookupMailHosts("gmail.com");
+        //System.out.println("Sending report");
+
+        sendReport(report);
+    }
+
+    private void sendReport(String report) throws MessagingException {
+
+        Properties prop = new Properties();
+
+        prop.put("mail.smtp.host", "ssl0.ovh.net");
+        prop.put("mail.smtp.port", "587");
+        prop.put("mail.smtp.auth", "true");
+        prop.put("mail.smtp.starttls.enable", "true");
+        prop.put("mail.smtp.ssl.protocols", "TLSv1.2");
+        prop.put("mail.smtp.ssl.trust", "ssl0.ovh.net");
+
+        String from = "postmaster@darkhorizon.es";
+        Session session = Session.getInstance(prop, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(from, "ubmail1234");
+            }
+        });
+
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(from));
+        message.setRecipients(
+                Message.RecipientType.TO, InternetAddress.parse(this.mail.getMailFrom()));
+        message.setSubject("MAIL REPORT FROM " + mail.getMailFrom());
+
+        MimeBodyPart mimeBodyPart = new MimeBodyPart();
+        mimeBodyPart.setContent(report, "text/html; charset=utf-8");
+
+
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(mimeBodyPart);
+
+        message.setContent(multipart);
+
+        Transport.send(message);
+        System.out.println("completed");
+    }
 
     private void send(String message) throws IOException {
         out.write(message + "\n");

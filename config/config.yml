@@ -1,3 +1,8 @@
+server:
+  ip: "localhost"
+  remote: "54.36.191.29"
+  port: 25
+  ssl_port: 465
 domain_check:
   sensitive: 15
   domains:

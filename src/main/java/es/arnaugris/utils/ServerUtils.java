@@ -1,13 +1,8 @@
 package es.arnaugris.utils;
 
-import com.sun.security.ntlm.Server;
-
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 public class ServerUtils {
 
