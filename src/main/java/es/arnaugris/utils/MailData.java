@@ -1,9 +1,7 @@
 package es.arnaugris.utils;
 
-import com.hp.gagawa.java.elements.Div;
-import es.arnaugris.external.DomainList;
+import es.arnaugris.external.DomainYaml;
 
-import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -24,6 +22,8 @@ public class MailData {
     private Map<String, Boolean> shorten;
     private Map<String, String> similar;
 
+    private Map<String, Integer> url_filtred;
+
 
     /**
      * Default class builder
@@ -35,14 +35,6 @@ public class MailData {
         shorten = new HashMap<>();
         blacklist = new HashMap<>();
         similar = new HashMap<>();
-    }
-
-    /**
-     * Obtain sender of mail
-     * @return sender of mail
-     */
-    public String getMailFrom() {
-        return mail_from;
     }
 
     /**
@@ -67,13 +59,6 @@ public class MailData {
         mail_to.add(result);
     }
 
-    /**
-     * Method to get receivers of the mail
-     * @return ArrayList with all the receivers
-     */
-    public ArrayList<String> getMailTo() {
-        return this.mail_to;
-    }
 
     /**
      * Method to add body message
@@ -84,14 +69,6 @@ public class MailData {
     }
 
     /**
-     * Method to get the body of the mail (message)
-     * @return List of message lines
-     */
-    public ArrayList<Object> getData() {
-        return this.data;
-    }
-
-    /**
      * Method to decode auth in base64
      * @param encoded encoded base64 SMTP auth message;
      */
@@ -99,7 +76,7 @@ public class MailData {
         encoded = encoded.replaceAll("AUTH PLAIN ", "");
 
         byte[] decoded = Base64.getDecoder().decode(encoded);
-        
+
         // replace null for space
         for (int i = 0; i < decoded.length; i++) {
             if (decoded[i] == 0) {
@@ -116,33 +93,6 @@ public class MailData {
     }
 
     /**
-     * Method to check if mail is dangerous
-     * @return True if dangerous, False otherwise
-     */
-    public void checkBlacklist() {
-        BlackListUtils blackListUtils = BlackListUtils.getInstance();
-        for (String uri : this.urls) {
-            String domain = extractDomain(uri);
-            try {
-                blackListUtils.checkDomain(domain);
-            } catch (IOException e) {
-                this.blacklist.put(uri, null);
-            }
-        }
-    }
-
-    /**
-     * Check if any URL has been shortened
-     */
-    public void checkShortenURLService() {
-        BlackListUtils blackListUtils = BlackListUtils.getInstance();
-        this.shorten.clear();
-        for (String uri : this.urls) {
-           this.shorten.put(uri, blackListUtils.checkShorteneer(uri));
-        }
-    }
-
-    /**
      * Check all options
      */
     public void checkAll() {
@@ -152,7 +102,7 @@ public class MailData {
 
         BlackListUtils blackListUtils = BlackListUtils.getInstance();
         Levenshtein lev = Levenshtein.getInstance();
-        DomainList domainList = DomainList.getInstance();
+        DomainYaml domainYaml = DomainYaml.getInstance();
 
         for (String uri : this.urls) {
             this.shorten.put(uri, blackListUtils.checkShorteneer(uri));
@@ -169,7 +119,7 @@ public class MailData {
 
             String most_similar = "None";
 
-            for (String check : domainList.getList()) {
+            for (String check : domainYaml.getList()) {
 
 
                 int distance = lev.levenshtein(check, domain);
@@ -179,7 +129,7 @@ public class MailData {
                     break;
                 }
 
-                if ((distance < min_distance) && (distance < domainList.getSensitive())) {
+                if ((distance < min_distance) && (distance < domainYaml.getSensitive())) {
                     most_similar = check;
                 }
             }
@@ -204,13 +154,6 @@ public class MailData {
         return map;
     }
 
-    public Map<String, Boolean> getBlacklist() {
-        return this.blacklist;
-    }
-
-    public Map<String, Boolean> getShorten() {
-        return this.shorten;
-    }
     /**
      * Method to extract domain from an URL
      * @param url The URL
@@ -222,13 +165,7 @@ public class MailData {
         return uri;
     }
 
-    /**
-     * Method to get the auth credentials
-     * @return auth credentials
-     */
-    public String getCredentials() {
-        return "mail: " + this.username + " pass: " + this.password;
-    }
+
 
     /**
      * Method to get the boundary and then extract the mail message
@@ -266,13 +203,6 @@ public class MailData {
         return message;
     }
 
-    /**
-     * Method to get the URL's
-     * @return ArrayList of URL's
-     */
-    public ArrayList<String> getURLs() {
-        return this.urls;
-    }
 
     /**
      * Method to extract URL's from messages
@@ -292,64 +222,14 @@ public class MailData {
         }
     }
 
-    public void clear() {
-        mail_from = "";
-        mail_to.clear();
-        data.clear();
-        username = "";
-        password = "";
-        content = "";
-        urls.clear();
-    }
 
-    public void checkDomainDistance() {
-        this.similar.clear();
 
-        Levenshtein lev = Levenshtein.getInstance();
-        DomainList domainList = DomainList.getInstance();
-
-        for (String url : this.urls) {
-            url = extractDomain(url);
-
-            int min_distance = Integer.MAX_VALUE;
-
-            String most_similar = "None";
-
-            for (String domain : domainList.getList()) {
-
-                int distance = lev.levenshtein(domain, url);
-
-                if (distance == 0) {
-                    most_similar = "Legitim link";
-                    break;
-                }
-
-                if ((distance < min_distance) && (distance < domainList.getSensitive())) {
-                    most_similar = domain;
-                }
-            }
-
-            similar.put(url, most_similar);
-
-        }
-    }
-
-    public Map<String, String> getSimilarityDomains() {
-        return this.similar;
-    }
 
     public String getReport() {
-
         this.extractMessage();
         this.checkAll();
 
-        //Div div = new Div();
-
         StringBuilder toReturn = new StringBuilder("<h4>REPORT FROM <a style=\"color: green;\"> ANTI PHISHING AG.ES </a>\n</h4>");
-
-        toReturn.append("<p>----------------- URLS -----------------\n");
-        toReturn.append(this.getURLs().toString());
-        toReturn.append("\n</p>");
 
         toReturn.append("<p>----------------- BLACKLIST -----------------\n");
 
@@ -382,7 +262,85 @@ public class MailData {
         }
         toReturn.append("\n</p>");
 
+        toReturn.append("<p>----------------- URLS -----------------\n");
+        toReturn.append(this.getURLs().toString());
+        toReturn.append("\n</p>");
+
         return toReturn.toString();
+    }
+
+    public void clear() {
+        mail_from = "";
+        mail_to.clear();
+        data.clear();
+        username = "";
+        password = "";
+        content = "";
+        urls.clear();
+    }
+
+    /**
+     * Method to get the auth credentials
+     * @return auth credentials
+     */
+    public String getCredentials() {
+        return "mail: " + this.username + " pass: " + this.password;
+    }
+
+    /**
+     * Method to get the URL's
+     * @return ArrayList of URL's
+     */
+    public ArrayList<String> getURLs() {
+        return this.urls;
+    }
+
+    /**
+     * Method to get Similar domains
+     * @return Map of similarities
+     */
+    public Map<String, String> getSimilarityDomains() {
+        return this.similar;
+    }
+
+    /**
+     * Method to get the blacklist result from URL'S
+     * @return Map of URL's
+     */
+    public Map<String, Boolean> getBlacklist() {
+        return this.blacklist;
+    }
+
+    /**
+     * Method to get URL's with shorten service
+     * @return Map of URL's
+     */
+    public Map<String, Boolean> getShorten() {
+        return this.shorten;
+    }
+
+    /**
+     * Method to get the body of the mail (message)
+     * @return List of message lines
+     */
+    public ArrayList<Object> getData() {
+        return this.data;
+    }
+
+    /**
+     * Obtain sender of mail
+     * @return sender of mail
+     */
+    public String getMailFrom() {
+        return mail_from;
+    }
+
+    /**
+     * Method to get receivers of the mail
+     * @return ArrayList with all the receivers
+     */
+    public ArrayList<String> getMailTo() {
+        return this.mail_to;
     }
 
 

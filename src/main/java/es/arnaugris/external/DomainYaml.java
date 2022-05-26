@@ -7,10 +7,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class DomainList {
+public class DomainYaml {
 
     // Singleton Instance
-    private static volatile DomainList instance = null;
+    private static volatile DomainYaml instance = null;
 
     private ArrayList<String> domains;
     private int sensitive = 0;
@@ -18,16 +18,16 @@ public class DomainList {
 
 
 
-    private DomainList() {
+    private DomainYaml() {
         domains = new ArrayList<>();
     }
 
-    public static DomainList getInstance() {
+    public static DomainYaml getInstance() {
         // To ensure only one instance is created
         if (instance == null) {
-            synchronized (DomainList.class) {
+            synchronized (DomainYaml.class) {
                 if (instance == null) {
-                    instance = new DomainList();
+                    instance = new DomainYaml();
                 }
             }
         }
