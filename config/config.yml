@@ -1,5 +1,5 @@
 domain_check:
-  sensitive: 0
+  sensitive: 15
   domains:
     - "ub.edu"
     - "campusvirtual.ub.edu"

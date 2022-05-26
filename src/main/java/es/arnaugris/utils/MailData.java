@@ -23,6 +23,7 @@ public class MailData {
     private Map<String, Boolean> shorten;
     private Map<String, String> similar;
 
+
     /**
      * Default class builder
      */
@@ -163,15 +164,21 @@ public class MailData {
                this.blacklist.put(uri, null);
             }*/
 
-            int min_distance = 999999999;
+            int min_distance = Integer.MAX_VALUE;
 
             String most_similar = "None";
 
             for (String check : domainList.getList()) {
 
+
                 int distance = lev.levenshtein(check, domain);
 
-                if ((distance < min_distance) && (distance != 0 ) && (distance < domainList.getSensitive())) {
+                if (distance == 0) {
+                    most_similar = "Legitim link";
+                    break;
+                }
+
+                if ((distance < min_distance) && (distance < domainList.getSensitive())) {
                     most_similar = check;
                 }
             }
@@ -293,20 +300,25 @@ public class MailData {
         this.similar.clear();
 
         Levenshtein lev = Levenshtein.getInstance();
-        DomainList domains = DomainList.getInstance();
+        DomainList domainList = DomainList.getInstance();
 
         for (String url : this.urls) {
             url = extractDomain(url);
 
-            int min_distance = 999999999;
+            int min_distance = Integer.MAX_VALUE;
 
             String most_similar = "None";
 
-            for (String domain : domains.getList()) {
+            for (String domain : domainList.getList()) {
 
                 int distance = lev.levenshtein(domain, url);
 
-                if ((distance < min_distance) && (distance != 0 ) && (distance < 10)) {
+                if (distance == 0) {
+                    most_similar = "Legitim link";
+                    break;
+                }
+
+                if ((distance < min_distance) && (distance < domainList.getSensitive())) {
                     most_similar = domain;
                 }
             }
