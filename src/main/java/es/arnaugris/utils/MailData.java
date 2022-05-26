@@ -16,25 +16,27 @@ public class MailData {
     private final ArrayList<Object> data;
     private String username;
     private String password;
-    private String content;
-    private ArrayList<String> urls;
-    private Map<String, Boolean> blacklist;
-    private Map<String, Boolean> shorten;
-    private Map<String, String> similar;
 
-    private Map<String, Integer> url_filtred;
+    private String message;
+    private final ArrayList<String> urls;
+    private final Map<String, Boolean> blacklist;
+    private final Map<String, Boolean> shorten;
+    private final Map<String, String> similar;
+
+    //private final Map<String, Integer> url_filtred;
 
 
     /**
      * Default class builder
      */
     public MailData() {
-        mail_to = new ArrayList<String>();
-        data = new ArrayList<Object>();
-        urls = new ArrayList<String>();
+        mail_to = new ArrayList<>();
+        data = new ArrayList<>();
+        urls = new ArrayList<>();
         shorten = new HashMap<>();
         blacklist = new HashMap<>();
         similar = new HashMap<>();
+        //url_filtred = new HashMap<>();
     }
 
     /**
@@ -104,10 +106,9 @@ public class MailData {
         Levenshtein lev = Levenshtein.getInstance();
         DomainYaml domainYaml = DomainYaml.getInstance();
 
+
         for (String uri : this.urls) {
             this.shorten.put(uri, blackListUtils.checkShorteneer(uri));
-            Map<String, String> result = convertBlacklistToMap("{\"status\":\"Not blacklisted\",\"blacklist_cnt\":0,\"blacklist_severity\":\"\",\"API_calls_remaining\":186,\"response\":\"OK\",\"blacklists\":[]}");
-
             String domain = extractDomain(uri);
             /*try {
                 blackListUtils.checkDomain(domain);
@@ -115,7 +116,13 @@ public class MailData {
                this.blacklist.put(uri, null);
             }*/
 
+            Map<String, String> result = convertBlacklistToMap("{\"status\":\"Not blacklisted\",\"blacklist_cnt\":3,\"blacklist_severity\":\"\",\"API_calls_remaining\":186,\"response\":\"OK\",\"blacklists\":[]}");
+            /*if (Integer.getInteger(result.get("blacklist_cnt"))> 0 ) {
+                blacklist.put(uri, true);
+            } */
+
             int min_distance = Integer.MAX_VALUE;
+
 
             String most_similar = "None";
 
@@ -199,7 +206,6 @@ public class MailData {
                 }
             }
         }
-        this.content = message;
         return message;
     }
 
@@ -217,17 +223,19 @@ public class MailData {
             }
             try {
                 URL url = new URL(word);
+                if ((word.contains("https:=")) || (word.contains("mailto:")) || (word.contains("tlf:"))) {
+                    continue;
+                }
                 urls.add(word);
             } catch (Exception ignored) {}
         }
     }
 
-
-
-
     public String getReport() {
-        this.extractMessage();
+
+        this.message = this.extractMessage();
         this.checkAll();
+
 
         StringBuilder toReturn = new StringBuilder("<h4>REPORT FROM <a style=\"color: green;\"> ANTI PHISHING AG.ES </a>\n</h4>");
 
@@ -275,7 +283,6 @@ public class MailData {
         data.clear();
         username = "";
         password = "";
-        content = "";
         urls.clear();
     }
 
@@ -341,6 +348,14 @@ public class MailData {
      */
     public ArrayList<String> getMailTo() {
         return this.mail_to;
+    }
+
+    /**
+     * Method to get body message
+     * @return The body message
+     */
+    public String getMessage() {
+        return this.message;
     }
 
 

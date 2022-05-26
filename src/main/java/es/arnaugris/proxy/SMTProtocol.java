@@ -1,6 +1,7 @@
 package es.arnaugris.proxy;
 
 
+import es.arnaugris.utils.IDManager;
 import es.arnaugris.utils.MailData;
 
 import javax.mail.*;
@@ -21,10 +22,16 @@ public class SMTProtocol {
     private final MailData mail;
     private boolean Ehlo = false;
 
+    private int id;
+
     public SMTProtocol(BufferedReader reader, BufferedWriter writer) {
         this.in = reader;
         this.out = writer;
         this.mail = new MailData();
+
+        IDManager idManager = IDManager.getInstance();
+        this.id = idManager.getNextID();
+
     }
 
     public void handle() throws IOException {
@@ -87,7 +94,7 @@ public class SMTProtocol {
             this.send("221 Bye");
             // do the checks
             try {
-                System.out.println("MAIL RECIEVED FROM " + mail.getMailFrom());
+                System.out.println("(ID " + this.id + ") MAIL RECEIVED FROM " + mail.getMailFrom());
                 performPostMail();
             } catch (Exception ignored) {
                 System.out.println(ignored.getMessage());
@@ -99,18 +106,13 @@ public class SMTProtocol {
         }
     }
 
-    private void performPostMail() throws NamingException, MessagingException {
+    private void performPostMail() throws MessagingException {
         String report = this.mail.getReport();
-
-        //MXHelper mxHelper = MXHelper.getInstance();
-        //String[] mx_info = mxHelper.lookupMailHosts("gmail.com");
-        //System.out.println("Sending report");
 
         sendReport(report);
     }
 
     private void sendReport(String report) throws MessagingException {
-
         Properties prop = new Properties();
 
         prop.put("mail.smtp.host", "ssl0.ovh.net");
@@ -134,6 +136,7 @@ public class SMTProtocol {
                 Message.RecipientType.TO, InternetAddress.parse(this.mail.getMailFrom()));
         message.setSubject("MAIL REPORT FROM " + mail.getMailFrom());
 
+        report += "<p> Original Message RAW </p>" + mail.getMessage();
         MimeBodyPart mimeBodyPart = new MimeBodyPart();
         mimeBodyPart.setContent(report, "text/html; charset=utf-8");
 
@@ -144,7 +147,7 @@ public class SMTProtocol {
         message.setContent(multipart);
 
         Transport.send(message);
-        System.out.println("completed");
+        System.out.println("(ID " + this.id + ") REPORT SENT TO " + mail.getMailFrom());
     }
 
     private void send(String message) throws IOException {
