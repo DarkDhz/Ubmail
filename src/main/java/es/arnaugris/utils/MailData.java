@@ -278,7 +278,12 @@ public class MailData {
      * @param line Line to check
      */
     private void extractURL(String line) {
+        line = line.replaceAll(">", " ").replaceAll("<", " ");
         for (String word : line.split(" ")) {
+            if (word.contains("href")) {
+                word = word.replaceAll("href=", " ");
+                word = word.replaceAll("\"", " ");
+            }
             try {
                 URL url = new URL(word);
                 urls.add(word);
