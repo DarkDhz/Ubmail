@@ -30,7 +30,7 @@ public class mailtest {
         prop.put("mail.smtp.starttls.enable", "true");
         //prop.put("mail.smtp.ssl.enable", "true");
         prop.put("mail.smtp.host", host);
-        prop.put("mail.smtp.port", "26");
+        prop.put("mail.smtp.port", "25");
 
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override

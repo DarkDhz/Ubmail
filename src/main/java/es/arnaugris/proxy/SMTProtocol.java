@@ -9,10 +9,11 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.naming.NamingException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 public class SMTProtocol {
@@ -36,6 +37,7 @@ public class SMTProtocol {
 
     public void handle() throws IOException {
         String readed;
+        System.out.println("(" + this.getActualTime() +  " ID " + this.id + ") STARTED HANDLING NEW REQUEST");
         send("220 Hola buenas soy el servidor");
 
         while (true) {
@@ -94,7 +96,8 @@ public class SMTProtocol {
             this.send("221 Bye");
             // do the checks
             try {
-                System.out.println("(ID " + this.id + ") MAIL RECEIVED FROM " + mail.getMailFrom());
+
+                System.out.println("(" + this.getActualTime() +  " ID " + this.id + ") MAIL RECEIVED FROM " + mail.getMailFrom());
                 performPostMail();
             } catch (Exception ignored) {
                 System.out.println(ignored.getMessage());
@@ -104,6 +107,12 @@ public class SMTProtocol {
         } else {
             mail.addData(message);
         }
+    }
+
+    private String getActualTime() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        return dtf.format(now);
     }
 
     private void performPostMail() throws MessagingException {
@@ -147,7 +156,7 @@ public class SMTProtocol {
         message.setContent(multipart);
 
         Transport.send(message);
-        System.out.println("(ID " + this.id + ") REPORT SENT TO " + mail.getMailFrom());
+        System.out.println("(" + this.getActualTime() +  " ID " + this.id + ") REPORT SENT TO " + mail.getMailFrom());
     }
 
     private void send(String message) throws IOException {

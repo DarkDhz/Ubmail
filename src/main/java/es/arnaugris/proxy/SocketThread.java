@@ -5,6 +5,7 @@ import javax.net.ssl.SSLSocket;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 // https://stackoverflow.com/questions/66534689/how-do-i-code-my-own-smtp-server-using-java
 // https://es.wikipedia.org/wiki/Protocolo_para_transferencia_simple_de_correo
 
@@ -15,22 +16,13 @@ public class SocketThread implements Runnable {
 
     public SocketThread(Socket soc) {
         socket = soc;
-        /*try {
-            Socket s = new Socket("smtp.email.host", 25);
-            mail_service = ProxyMethods.convertSocketToSSL(s);
-
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }*/
 
     }
 
     public void run() {
         try {
-            final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "8859_1"));
-            final BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "8859_1"));
+            final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+            final BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
 
             SMTProtocol protocol_handler = new SMTProtocol(in, out);
             protocol_handler.handle();
