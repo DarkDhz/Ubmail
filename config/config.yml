@@ -1,10 +1,10 @@
 server:
-  ip: "localhost"
+  ip: "54.36.191.29"
   remote: "54.36.191.29"
   port: 25
   ssl_port: 465
 domain_check:
-  sensitive: 15
+  sensitive: 5
   domains:
     - "ub.edu"
     - "campusvirtual.ub.edu"

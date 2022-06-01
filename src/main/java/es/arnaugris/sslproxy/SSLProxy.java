@@ -20,7 +20,7 @@ public class SSLProxy extends ServerUtils implements Runnable{
 
         try {
             server = super.createServerSocket(host, port);
-            System.out.println("Server iniciado");
+            System.out.println("Open SSL server on " + host + ":" + port);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             throw new IOException("Cannot open server");

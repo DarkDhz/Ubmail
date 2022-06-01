@@ -16,7 +16,7 @@ public class Proxy extends ServerUtils implements Runnable{
     public Proxy(String host, int port) throws IOException {
         try {
             server = super.createServerSocket(host, port);
-            System.out.println("Server iniciado");
+            System.out.println("Open server on " + host + ":" + port);
         } catch (IOException e) {
             throw new IOException("Cannot open server");
             //System.exit(0);

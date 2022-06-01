@@ -21,7 +21,7 @@ import static jdk.nashorn.internal.objects.NativeDate.toJSON;
 
 public class mailtest {
 
-    private final String host = "localhost";
+    private final String host = "54.36.191.29";
 
     @Test
     public void test() throws IOException, MessagingException {
@@ -30,7 +30,7 @@ public class mailtest {
         prop.put("mail.smtp.starttls.enable", "true");
         //prop.put("mail.smtp.ssl.enable", "true");
         prop.put("mail.smtp.host", host);
-        prop.put("mail.smtp.port", "25");
+        prop.put("mail.smtp.port", "26");
 
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override
