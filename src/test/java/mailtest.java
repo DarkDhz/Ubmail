@@ -1,9 +1,5 @@
 import org.junit.Test;
-import sun.net.www.http.HttpClient;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -12,16 +8,12 @@ import javax.mail.internet.MimeMultipart;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Properties;
 
-import static jdk.nashorn.internal.objects.NativeDate.toJSON;
 
 public class mailtest {
 
-    private final String host = "54.36.191.29";
+    private final String host = "localhost";
 
     @Test
     public void test() throws IOException, MessagingException {
@@ -35,14 +27,14 @@ public class mailtest {
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("test@gmail.com", "unkopwn1223s");
+                return new PasswordAuthentication("arnau.gris@gmail.com", "unkopwn1223s");
             }
         });
 
         Message message = new MimeMessage(session);
 
 
-        message.setFrom(new InternetAddress("from@gmail.com"));
+        message.setFrom(new InternetAddress("arnau.gris@gmail.com"));
 
         InternetAddress[] myToList = InternetAddress.parse("gopi.mani@xyz.com,Maimsa.SF@xyz.com");
         InternetAddress[] myBccList = InternetAddress.parse("Usha.B@xyz.com");

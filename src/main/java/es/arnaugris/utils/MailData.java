@@ -23,7 +23,7 @@ public class MailData {
     private final Map<String, Boolean> shorten;
     private final Map<String, String> similar;
 
-    //private final Map<String, Integer> url_filtred;
+    //private final Map<String, Integer> url_filtered;
 
 
     /**
@@ -36,7 +36,7 @@ public class MailData {
         shorten = new HashMap<>();
         blacklist = new HashMap<>();
         similar = new HashMap<>();
-        //url_filtred = new HashMap<>();
+        //url_filtered = new HashMap<>();
     }
 
     /**
@@ -108,18 +108,18 @@ public class MailData {
 
 
         for (String uri : this.urls) {
-            this.shorten.put(uri, blackListUtils.checkShorteneer(uri));
+            this.shorten.put(uri, blackListUtils.checkShortener(uri));
             String domain = extractDomain(uri);
+
             /*try {
                 blackListUtils.checkDomain(domain);
             } catch (IOException e) {
                this.blacklist.put(uri, null);
             }*/
 
-            Map<String, String> result = convertBlacklistToMap("{\"status\":\"Not blacklisted\",\"blacklist_cnt\":3,\"blacklist_severity\":\"\",\"API_calls_remaining\":186,\"response\":\"OK\",\"blacklists\":[]}");
-            /*if (Integer.getInteger(result.get("blacklist_cnt"))> 0 ) {
-                blacklist.put(uri, true);
-            } */
+            Map<String, String> blacklistJSON = convertBlacklistToMap("{\"status\":\"Not blacklisted\",\"blacklist_cnt\":3,\"blacklist_severity\":\"\",\"API_calls_remaining\":186,\"response\":\"OK\",\"blacklists\":[]}");
+
+            blacklist.put(domain, Integer.parseInt(blacklistJSON.get("blacklist_cnt")) > 0);
 
             int min_distance = Integer.MAX_VALUE;
 
@@ -132,7 +132,7 @@ public class MailData {
                 int distance = lev.levenshtein(check, domain);
 
                 if (distance == 0) {
-                    most_similar = "Legitim link";
+                    most_similar = "Legitimate link";
                     break;
                 }
 
@@ -147,22 +147,21 @@ public class MailData {
 
     }
 
-    // change to string to JSON TODO
-    private Map<String, String> convertBlacklistToMap(String message) {
-        message = message.substring(1, message.length()-1);
-        String[] keyValuePairs = message.split(",");
+    private Map<String, String> convertBlacklistToMap(String data) {
+        data = data.substring(1, data.length()-1);
+        String[] keyValuePairs = data.split(",");
         Map<String,String> map = new HashMap<>();
 
         for(String pair : keyValuePairs) {
             String[] entry = pair.split(":");
-            map.put(entry[0].trim(), entry[1].trim());
+            map.put(entry[0].replaceAll("\"", ""), entry[1].replaceAll("\"", ""));
         }
 
         return map;
     }
 
     /**
-     * Method to extract domain from an URL
+     * Method to extract domain from a URL
      * @param url The URL
      * @return The domain of the URL
      */
@@ -182,7 +181,7 @@ public class MailData {
         String boundary = null;
         String end_boundary = null;
         boolean reading = false;
-        String message = "";
+        StringBuilder message = new StringBuilder();
 
         for (Object line : data) {
             if (line instanceof String) {
@@ -193,7 +192,7 @@ public class MailData {
                             reading = false;
                         } else {
                             extractURL(line_string);
-                            message = message + line_string + "\n";
+                            message.append(line_string).append("\n");
                         }
                     } else {
                         if (line_string.contains(boundary)) {
@@ -206,12 +205,12 @@ public class MailData {
                 }
             }
         }
-        return message;
+        return message.toString();
     }
 
 
     /**
-     * Method to extract URL's from messages
+     * Method to extract URLs from messages
      * @param line Line to check
      */
     private void extractURL(String line) {
@@ -226,7 +225,7 @@ public class MailData {
                 if ((word.contains("https:=")) || (word.contains("mailto:")) || (word.contains("tlf:"))) {
                     continue;
                 }
-                urls.add(word);
+                urls.add(word.replaceAll(" ", ""));
             } catch (Exception ignored) {}
         }
     }
@@ -244,9 +243,8 @@ public class MailData {
         Map<String, Boolean> black_list = this.getBlacklist();
 
         for (Map.Entry<String, Boolean> entry : black_list.entrySet()) {
-            if (entry.getValue()) {
-                toReturn.append("URL ").append(entry.getKey()).append(" is inside a blacklist!\n");
-            }
+            toReturn.append("\n</p><p>");
+            toReturn.append(toReturn.append("URL ").append(entry.getKey()).append(" ").append(entry.getValue())).append(" \n");
         }
         toReturn.append("\n</p>");
 
@@ -255,6 +253,7 @@ public class MailData {
         Map<String, String> similar = this.getSimilarityDomains();
 
         for (Map.Entry<String, String> entry : similar.entrySet()) {
+            toReturn.append("\n</p><p>");
             toReturn.append(entry.getKey()).append(" similar to ").append(entry.getValue()).append("\n");
         }
         toReturn.append("\n</p>");
@@ -264,14 +263,16 @@ public class MailData {
         Map<String, Boolean> shorten = this.getShorten();
 
         for (Map.Entry<String, Boolean> entry : shorten.entrySet()) {
-            if (entry.getValue()) {
-                toReturn.append("URL ").append(entry.getKey()).append(" is using URL-SHORTEN service.\n");
-            }
+            toReturn.append("\n</p><p>");
+            toReturn.append("URL ").append(entry.getKey()).append(" ").append(entry.getValue()).append(" \n");
         }
         toReturn.append("\n</p>");
 
         toReturn.append("<p>----------------- URLS -----------------\n");
-        toReturn.append(this.getURLs().toString());
+        for (String uri : this.getURLs()) {
+            toReturn.append("\n</p><p>");
+            toReturn.append(uri).append(" \n");
+        }
         toReturn.append("\n</p>");
 
         return toReturn.toString();
@@ -295,8 +296,8 @@ public class MailData {
     }
 
     /**
-     * Method to get the URL's
-     * @return ArrayList of URL's
+     * Method to get the URLs
+     * @return ArrayList of URLs
      */
     public ArrayList<String> getURLs() {
         return this.urls;
@@ -311,16 +312,16 @@ public class MailData {
     }
 
     /**
-     * Method to get the blacklist result from URL'S
-     * @return Map of URL's
+     * Method to get the blacklist result from HURL'S
+     * @return Map of URLs
      */
     public Map<String, Boolean> getBlacklist() {
         return this.blacklist;
     }
 
     /**
-     * Method to get URL's with shorten service
-     * @return Map of URL's
+     * Method to get URLs with shorten service
+     * @return Map of URLs
      */
     public Map<String, Boolean> getShorten() {
         return this.shorten;

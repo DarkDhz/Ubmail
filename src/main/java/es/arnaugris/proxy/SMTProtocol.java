@@ -23,7 +23,7 @@ public class SMTProtocol {
     private final MailData mail;
     private boolean Ehlo = false;
 
-    private int id;
+    private final int id;
 
     public SMTProtocol(BufferedReader reader, BufferedWriter writer) {
         this.in = reader;
@@ -99,8 +99,8 @@ public class SMTProtocol {
 
                 System.out.println("(" + this.getActualTime() +  " ID " + this.id + ") MAIL RECEIVED FROM " + mail.getMailFrom());
                 performPostMail();
-            } catch (Exception ignored) {
-                System.out.println(ignored.getMessage());
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
             }
 
             throw new IOException("close socket");
@@ -135,7 +135,7 @@ public class SMTProtocol {
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(from, "ubmail1234");
+                return new PasswordAuthentication(from, "ubmail12345");
             }
         });
 

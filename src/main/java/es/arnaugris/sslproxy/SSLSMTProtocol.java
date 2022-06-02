@@ -6,6 +6,7 @@ import es.arnaugris.utils.SocketUtils;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSocket;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.Certificate;
 import java.net.Socket;
 
@@ -19,8 +20,8 @@ public class SSLSMTProtocol extends SocketUtils {
 
     public SSLSMTProtocol(Socket socket) throws IOException {
         this.socket = socket;
-        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "8859_1"));;
-        this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "8859_1"));;
+        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+        this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
         this.mail = new MailData();
     }
 
@@ -118,12 +119,4 @@ public class SSLSMTProtocol extends SocketUtils {
         return in.readLine();
     }
 
-    private void updateSocket(Socket socket) throws IOException {
-        /*this.socket = socket;
-        this.input = this.socket.getInputStream();
-        this.out = new CRLFTerminatedReader(this.input);
-        this.writer = new PrintWriter(this.socket.getOutputStream());
-
-        this.socket.setSoTimeout(this.server.getConnectionTimeout());*/
-    }
 }

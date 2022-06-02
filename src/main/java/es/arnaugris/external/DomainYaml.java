@@ -49,7 +49,6 @@ public class DomainYaml {
         this.sensitive = (int) info.get("sensitive");
         this.domains = (ArrayList<String>) info.get("domains");
 
-        Map<String, Object> server = (Map<String, Object>) data.get("server");
 
     }
 

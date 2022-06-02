@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 
 public class BlackListUtils {
@@ -13,9 +11,9 @@ public class BlackListUtils {
     // Singleton Instance
     private static volatile BlackListUtils instance = null;
 
-    // here input you api key fror BlacklistMaster
+    // here input you api key from BlacklistMaster
     // www.blacklistmaster.com
-    private String api_key = "7jL0GedmCBjSBNro5Vcjxy3Udffdg660";
+    private final String api_key = "7jL0GedmCBjSBNro5Vcjxy3Udffdg660";
 
     private BlackListUtils() {
 
@@ -70,13 +68,13 @@ public class BlackListUtils {
             e.printStackTrace();
         }
 
-        System.out.println(result.toString());
+        System.out.println(result);
 
         // TODO
         return true;
     }
 
-    public boolean checkShorteneer(String url) {
+    public boolean checkShortener(String url) {
         if (url.contains("goo.gl")) {
             return true;
         }

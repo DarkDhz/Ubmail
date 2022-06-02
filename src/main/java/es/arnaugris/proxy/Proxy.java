@@ -2,16 +2,13 @@ package es.arnaugris.proxy;
 
 import es.arnaugris.utils.ServerUtils;
 
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Proxy extends ServerUtils implements Runnable{
 
-    private ServerSocket server;
+    private final ServerSocket server;
 
     public Proxy(String host, int port) throws IOException {
         try {

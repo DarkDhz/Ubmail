@@ -1,17 +1,10 @@
 package es.arnaugris.sslproxy;
 
-import es.arnaugris.proxy.SocketThread;
 import es.arnaugris.utils.ServerUtils;
 
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
 
 public class SSLProxy extends ServerUtils implements Runnable{
     private final ServerSocket server;
