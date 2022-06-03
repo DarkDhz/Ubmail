@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Proxy extends ServerUtils implements Runnable{
+public class Proxy extends ServerUtils implements Runnable {
 
     private final ServerSocket server;
 
@@ -16,7 +16,6 @@ public class Proxy extends ServerUtils implements Runnable{
             System.out.println("Open server on " + host + ":" + port);
         } catch (IOException e) {
             throw new IOException("Cannot open server");
-            //System.exit(0);
         }
     }
 
@@ -24,7 +23,6 @@ public class Proxy extends ServerUtils implements Runnable{
         while(true) {
             try {
                 Socket socket = server.accept();
-                //SSLSocket sslSocket = ProxyMethods.convertSocketToSSL(socket);
 
                 SocketThread st = new SocketThread(socket);
 
@@ -34,9 +32,6 @@ public class Proxy extends ServerUtils implements Runnable{
                 System.out.println(e.getMessage());
                 break;
             }
-
-
         }
-
     }
 }

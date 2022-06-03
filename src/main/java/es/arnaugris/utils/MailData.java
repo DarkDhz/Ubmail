@@ -235,7 +235,6 @@ public class MailData {
         this.message = this.extractMessage();
         this.checkAll();
 
-
         StringBuilder toReturn = new StringBuilder("<h4>REPORT FROM <a style=\"color: green;\"> ANTI PHISHING AG.ES </a>\n</h4>");
 
         toReturn.append("<p>----------------- BLACKLIST -----------------\n");
