@@ -1,8 +1,10 @@
 package es.arnaugris.proxy;
 
 
+import es.arnaugris.utils.ConsoleLogger;
 import es.arnaugris.utils.IDManager;
 import es.arnaugris.utils.MailData;
+import es.arnaugris.utils.MailSender;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -23,21 +25,21 @@ public class SMTProtocol {
     private final MailData mail;
     private boolean Ehlo = false;
 
-    private final int id;
+    private final ConsoleLogger consoleLogger;
 
     public SMTProtocol(BufferedReader reader, BufferedWriter writer) {
         this.in = reader;
         this.out = writer;
         this.mail = new MailData();
+        this.consoleLogger = new ConsoleLogger();
 
-        IDManager idManager = IDManager.getInstance();
-        this.id = idManager.getNextID();
+
 
     }
 
     public void handle() throws IOException {
         String readed;
-        System.out.println("(" + this.getActualTime() +  " ID " + this.id + ") STARTED HANDLING NEW REQUEST");
+        consoleLogger.printStart();
         send("220 Hola buenas soy el servidor");
 
         while (true) {
@@ -94,7 +96,7 @@ public class SMTProtocol {
             // do the checks
             try {
 
-                System.out.println("(" + this.getActualTime() +  " ID " + this.id + ") MAIL RECEIVED FROM " + mail.getMailFrom());
+                consoleLogger.printReceived(mail.getMailFrom());
                 performPostMail();
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
@@ -106,55 +108,14 @@ public class SMTProtocol {
         }
     }
 
-    private String getActualTime() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        return dtf.format(now);
-    }
+
 
     private void performPostMail() throws MessagingException {
-        String report = this.mail.getReport();
+        MailSender.getInstance().sendReport(this.mail);
+        consoleLogger.printSended(mail.getMailFrom());
 
-        sendReport(report);
     }
 
-    private void sendReport(String report) throws MessagingException {
-        Properties prop = new Properties();
-
-        prop.put("mail.smtp.host", "ssl0.ovh.net");
-        prop.put("mail.smtp.port", "587");
-        prop.put("mail.smtp.auth", "true");
-        prop.put("mail.smtp.starttls.enable", "true");
-        prop.put("mail.smtp.ssl.protocols", "TLSv1.2");
-        prop.put("mail.smtp.ssl.trust", "ssl0.ovh.net");
-
-        String from = "postmaster@darkhorizon.es";
-        Session session = Session.getInstance(prop, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(from, "ubmail12345");
-            }
-        });
-
-        Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(from));
-        message.setRecipients(
-                Message.RecipientType.TO, InternetAddress.parse(this.mail.getMailFrom()));
-        message.setSubject("MAIL REPORT FROM " + mail.getMailFrom());
-
-        report += "<p> Original Message RAW </p>" + mail.getMessage();
-        MimeBodyPart mimeBodyPart = new MimeBodyPart();
-        mimeBodyPart.setContent(report, "text/html; charset=utf-8");
-
-
-        Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(mimeBodyPart);
-
-        message.setContent(multipart);
-
-        Transport.send(message);
-        System.out.println("(" + this.getActualTime() +  " ID " + this.id + ") REPORT SENT TO " + mail.getMailFrom());
-    }
 
     private void send(String message) throws IOException {
         out.write(message + "\n");

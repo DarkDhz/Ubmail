@@ -80,10 +80,7 @@ public class SSLSMTProtocol extends SocketUtils {
                     Certificate[] peerCertificates = s.getSession().getPeerCertificates();
                     //sess.setTlsPeerCertificates(peerCertificates);
                 }
-                catch (SSLPeerUnverifiedException e)
-                {
-                    // IGNORE, just leave the certificate chain null
-                }
+                catch (SSLPeerUnverifiedException ignored) {}
             }
         } else if (opcode.equalsIgnoreCase("AUTH")) {
             this.send("235 2.7.0 Authentication successful");
@@ -104,7 +101,6 @@ public class SSLSMTProtocol extends SocketUtils {
             System.out.println(mail.getData());
             throw new IOException("close socket");
         } else {
-            //System.out.println("hola");
             mail.addData(message);
         }
     }
