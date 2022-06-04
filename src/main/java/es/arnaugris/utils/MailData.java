@@ -22,8 +22,7 @@ public class MailData {
     private final Map<String, Boolean> blacklist;
     private final Map<String, Boolean> shorten;
     private final Map<String, String> similar;
-
-    //private final Map<String, Integer> url_filtered;
+    private final Map<String, Boolean> banned;
 
 
     /**
@@ -36,7 +35,7 @@ public class MailData {
         shorten = new HashMap<>();
         blacklist = new HashMap<>();
         similar = new HashMap<>();
-        //url_filtered = new HashMap<>();
+        banned = new HashMap<>();
     }
 
     /**
@@ -231,51 +230,14 @@ public class MailData {
     }
 
     public String getReport() {
-
         this.message = this.extractMessage();
         this.checkAll();
 
-        StringBuilder toReturn = new StringBuilder("<h4>REPORT FROM <a style=\"color: green;\"> ANTI PHISHING AG.ES </a>\n</h4>");
-
-        toReturn.append("<p>----------------- BLACKLIST -----------------\n");
-
-        Map<String, Boolean> black_list = this.getBlacklist();
-
-        for (Map.Entry<String, Boolean> entry : black_list.entrySet()) {
-            toReturn.append("\n</p><p>");
-            toReturn.append("URL ").append(entry.getKey()).append(" ").append(entry.getValue()).append(" \n");
-        }
-        toReturn.append("\n</p>");
-
-        toReturn.append("<p>----------------- SIMILAR -----------------\n");
-
-        Map<String, String> similar = this.getSimilarityDomains();
-
-        for (Map.Entry<String, String> entry : similar.entrySet()) {
-            toReturn.append("\n</p><p>");
-            toReturn.append(entry.getKey()).append(" similar to ").append(entry.getValue()).append("\n");
-        }
-        toReturn.append("\n</p>");
-
-        toReturn.append("<p>----------------- SHORTEN -----------------");
-
-        Map<String, Boolean> shorten = this.getShorten();
-
-        for (Map.Entry<String, Boolean> entry : shorten.entrySet()) {
-            toReturn.append("\n</p><p>");
-            toReturn.append("URL ").append(entry.getKey()).append(" ").append(entry.getValue()).append(" \n");
-        }
-        toReturn.append("\n</p>");
-
-        toReturn.append("<p>----------------- URLS -----------------\n");
-        for (String uri : this.getURLs()) {
-            toReturn.append("\n</p><p>");
-            toReturn.append(uri).append(" \n");
-        }
-        toReturn.append("\n</p>");
-
-        return toReturn.toString();
+        ReportGenerator reportGenerator = new ReportGenerator(this);
+        return reportGenerator.generateHTMLReport();
     }
+
+
 
     public void clear() {
         mail_from = "";
@@ -284,6 +246,10 @@ public class MailData {
         username = "";
         password = "";
         urls.clear();
+    }
+
+    public Map<String, Boolean> getBanned() {
+        return this.banned;
     }
 
     /**

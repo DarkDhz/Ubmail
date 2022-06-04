@@ -32,6 +32,7 @@ public class MailSender {
 
     public void sendReport(MailData mail) throws MessagingException {
         String report = mail.getReport();
+        System.out.println(report);
 
         Properties prop = new Properties();
 
