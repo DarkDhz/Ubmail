@@ -243,7 +243,7 @@ public class MailData {
 
         for (Map.Entry<String, Boolean> entry : black_list.entrySet()) {
             toReturn.append("\n</p><p>");
-            toReturn.append(toReturn.append("URL ").append(entry.getKey()).append(" ").append(entry.getValue())).append(" \n");
+            toReturn.append("URL ").append(entry.getKey()).append(" ").append(entry.getValue()).append(" \n");
         }
         toReturn.append("\n</p>");
 
