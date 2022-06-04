@@ -1,4 +1,4 @@
-package es.arnaugris.utils;
+package es.arnaugris.utils.checks;
 
 public class Levenshtein {
 

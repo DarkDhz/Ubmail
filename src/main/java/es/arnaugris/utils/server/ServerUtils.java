@@ -1,4 +1,4 @@
-package es.arnaugris.utils;
+package es.arnaugris.utils.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

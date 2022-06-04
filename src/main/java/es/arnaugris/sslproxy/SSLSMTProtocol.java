@@ -1,7 +1,7 @@
 package es.arnaugris.sslproxy;
 
 import es.arnaugris.utils.MailData;
-import es.arnaugris.utils.SocketUtils;
+import es.arnaugris.utils.server.SocketUtils;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSocket;

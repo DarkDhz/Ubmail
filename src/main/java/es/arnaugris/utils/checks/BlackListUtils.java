@@ -1,4 +1,4 @@
-package es.arnaugris.utils;
+package es.arnaugris.utils.checks;
 
 import es.arnaugris.external.BlacklistYaml;
 import es.arnaugris.external.DomainYaml;
@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BlackListUtils {
 
@@ -56,7 +57,7 @@ public class BlackListUtils {
      * @return 0 if not danger 1 if domain is dangerous
      * @throws IOException
      */
-    public boolean checkDomain(String domain) throws IOException {
+    public Map<String, String> checkDomain(String domain) throws IOException {
 
         StringBuilder result = new StringBuilder();
 
@@ -73,11 +74,26 @@ public class BlackListUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println(result.toString());
+        return convertBlacklistToMap(result.toString());
+    }
 
-        System.out.println(result);
+    public Map<String, String> fakeDomain() throws IOException  {
+        String defaultST = "{\"status\":\"Not blacklisted\",\"blacklist_cnt\":1,\"blacklist_severity\":\"\",\"API_calls_remaining\":191,\"response\":\"OK\",\"blacklists\":[]}";
+        return convertBlacklistToMap(defaultST);
+    }
 
-        // TODO
-        return true;
+    private Map<String, String> convertBlacklistToMap(String data) {
+        data = data.substring(1, data.length()-1);
+        String[] keyValuePairs = data.split(",");
+        Map<String,String> map = new HashMap<>();
+
+        for(String pair : keyValuePairs) {
+            String[] entry = pair.split(":");
+            map.put(entry[0].replaceAll("\"", ""), entry[1].replaceAll("\"", ""));
+        }
+
+        return map;
     }
 
     public boolean checkShortener(String url) {

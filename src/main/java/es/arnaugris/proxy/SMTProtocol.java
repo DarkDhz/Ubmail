@@ -1,22 +1,14 @@
 package es.arnaugris.proxy;
 
 
-import es.arnaugris.utils.ConsoleLogger;
-import es.arnaugris.utils.IDManager;
+import es.arnaugris.utils.smtp.ConsoleLogger;
 import es.arnaugris.utils.MailData;
-import es.arnaugris.utils.MailSender;
+import es.arnaugris.utils.smtp.MailSender;
 
 import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Properties;
 
 public class SMTProtocol {
 
@@ -73,9 +65,9 @@ public class SMTProtocol {
             this.send("503 Invalid secuence of commands");
         } else if (opcode.equalsIgnoreCase("VRFY")) {
             this.send("250 OK");
-        } else if (opcode.equalsIgnoreCase("AUTH")) {
+        /*} else if (opcode.equalsIgnoreCase("AUTH")) {
             mail.auth(message);
-            this.send("235 2.7.0 Authentication successful");
+            this.send("235 2.7.0 Authentication successful");*/
         } else if (opcode.equalsIgnoreCase("MAIL")) {
             mail.clearAndSetMail_from(message);
             this.send("250 OK");
@@ -107,8 +99,6 @@ public class SMTProtocol {
             mail.addData(message);
         }
     }
-
-
 
     private void performPostMail() throws MessagingException {
         MailSender.getInstance().sendReport(this.mail);

@@ -1,4 +1,4 @@
-package es.arnaugris.utils;
+package es.arnaugris.utils.smtp;
 
 public class IDManager {
 

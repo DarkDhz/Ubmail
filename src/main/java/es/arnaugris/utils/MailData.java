@@ -1,7 +1,11 @@
 package es.arnaugris.utils;
 
 import es.arnaugris.external.DomainYaml;
+import es.arnaugris.utils.checks.BlackListUtils;
+import es.arnaugris.utils.checks.Levenshtein;
+import es.arnaugris.utils.smtp.ReportGenerator;
 
+import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -110,15 +114,16 @@ public class MailData {
             this.shorten.put(uri, blackListUtils.checkShortener(uri));
             String domain = extractDomain(uri);
 
-            /*try {
-                blackListUtils.checkDomain(domain);
+            try {
+                //TODO CHANGE FOR DELIVERY
+                //Map<String, String> blacklistJSON = blackListUtils.checkDomain(domain);
+                Map<String, String> blacklistJSON = blackListUtils.fakeDomain();
+                blacklist.put(domain, Integer.parseInt(blacklistJSON.get("blacklist_cnt")) > 0);
             } catch (IOException e) {
-               this.blacklist.put(uri, null);
-            }*/
+               this.blacklist.put(uri, false);
+            }
 
-            Map<String, String> blacklistJSON = convertBlacklistToMap("{\"status\":\"Not blacklisted\",\"blacklist_cnt\":3,\"blacklist_severity\":\"\",\"API_calls_remaining\":186,\"response\":\"OK\",\"blacklists\":[]}");
 
-            blacklist.put(domain, Integer.parseInt(blacklistJSON.get("blacklist_cnt")) > 0);
 
             int min_distance = Integer.MAX_VALUE;
 
@@ -146,18 +151,6 @@ public class MailData {
 
     }
 
-    private Map<String, String> convertBlacklistToMap(String data) {
-        data = data.substring(1, data.length()-1);
-        String[] keyValuePairs = data.split(",");
-        Map<String,String> map = new HashMap<>();
-
-        for(String pair : keyValuePairs) {
-            String[] entry = pair.split(":");
-            map.put(entry[0].replaceAll("\"", ""), entry[1].replaceAll("\"", ""));
-        }
-
-        return map;
-    }
 
     /**
      * Method to extract domain from a URL
@@ -237,8 +230,6 @@ public class MailData {
         return reportGenerator.generateHTMLReport();
     }
 
-
-
     public void clear() {
         mail_from = "";
         mail_to.clear();
@@ -250,14 +241,6 @@ public class MailData {
 
     public Map<String, Boolean> getBanned() {
         return this.banned;
-    }
-
-    /**
-     * Method to get the auth credentials
-     * @return auth credentials
-     */
-    public String getCredentials() {
-        return "mail: " + this.username + " pass: " + this.password;
     }
 
     /**

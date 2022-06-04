@@ -1,6 +1,6 @@
 package es.arnaugris.proxy;
 
-import es.arnaugris.utils.ServerUtils;
+import es.arnaugris.utils.server.ServerUtils;
 
 import java.io.IOException;
 import java.net.ServerSocket;
