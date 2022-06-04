@@ -43,6 +43,9 @@ public class main {
         System.setProperty("javax.net.ssl.keyStore", certificateYaml.getPath());
         System.setProperty("javax.net.ssl.keyStorePassword", certificateYaml.getPassword());
 
+
+        // https://www.sparkpost.com/blog/what-smtp-port/#:~:text=IANA%20initially%20assigned%20port%20465,Secure%20Sockets%20Layer%20(SSL).
+
         try {
             ServerYaml server = ServerYaml.getInstance();
 
@@ -59,7 +62,7 @@ public class main {
 
         } catch (IOException ex) {
             ex.printStackTrace();
-            System.out.println("cannot open the server");
+            System.out.println("ERROR OPENING SERVERS, CHECK CONFIGURATION!");
         }
 
     }

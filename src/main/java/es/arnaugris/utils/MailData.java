@@ -104,6 +104,7 @@ public class MailData {
         this.similar.clear();
         this.shorten.clear();
         this.blacklist.clear();
+        this.banned.clear();
 
         BlackListUtils blackListUtils = BlackListUtils.getInstance();
         Levenshtein lev = Levenshtein.getInstance();
@@ -112,7 +113,15 @@ public class MailData {
 
         for (String uri : this.urls) {
             this.shorten.put(uri, blackListUtils.checkShortener(uri));
-            String domain = extractDomain(uri);
+
+            String domain;
+
+            try {
+                domain = extractDomain(uri);
+            } catch (Exception e) {
+                break;
+            }
+
 
             try {
                 //TODO CHANGE FOR DELIVERY
@@ -161,8 +170,12 @@ public class MailData {
      * @param url The URL
      * @return The domain of the URL
      */
-    private String extractDomain(String url) {
-        String uri = url.split("//")[1];
+    private String extractDomain(String url) throws Exception {
+        String[] splited = url.split("//");
+        if (splited.length == 0) {
+            throw new Exception("Not real domain");
+        }
+        String uri = splited[1];
         uri = uri.split("/")[0];
         return uri;
     }
@@ -240,6 +253,7 @@ public class MailData {
         username = "";
         password = "";
         urls.clear();
+        banned.clear();
     }
 
     public Map<String, Boolean> getBanned() {
