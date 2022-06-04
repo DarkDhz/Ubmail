@@ -14,6 +14,7 @@ import java.util.Properties;
 public class mailtest {
 
     private final String host = "localhost";
+    //private final String host = "54.36.191.29";
 
     @Test
     public void test() throws IOException, MessagingException {

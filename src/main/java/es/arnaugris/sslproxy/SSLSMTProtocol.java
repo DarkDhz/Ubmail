@@ -64,8 +64,8 @@ public class SSLSMTProtocol extends ProtocolUtils {
                 }
                 catch (SSLPeerUnverifiedException ignored) {}
             }
-        } else if (opcode.equalsIgnoreCase("AUTH")) {
-            this.send("235 2.7.0 Authentication successful");
+        /*} else if (opcode.equalsIgnoreCase("AUTH")) {
+            this.send("235 2.7.0 Authentication successful");*/
         } else if (opcode.equalsIgnoreCase("MAIL")) {
             mail.clearAndSetMail_from(message);
             this.send("250 OK");
