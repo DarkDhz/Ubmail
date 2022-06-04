@@ -39,7 +39,7 @@ public class ReportGenerator {
         for (Map.Entry<String, Boolean> entry : black_list.entrySet()) {
             if (entry.getValue()) {
                 toReturn.append("\n</p><p>");
-                toReturn.append("URL ").append(entry.getKey()).append(" ").append(" IS <a style=\"color: red;\">BLACKLISTED</a>").append(" \n");
+                toReturn.append("URL ").append(entry.getKey()).append(" ").append(" IS <strong><a style=\"color: red;\">BLACKLISTED</a></strong>").append(" \n");
             }
         }
         toReturn.append("\n</p>");
@@ -52,8 +52,10 @@ public class ReportGenerator {
         Map<String, Boolean> banned_list = data.getBanned();
 
         for (Map.Entry<String, Boolean> entry : banned_list.entrySet()) {
-            toReturn.append("\n</p><p>");
-            toReturn.append("URL ").append(entry.getKey()).append(" ").append(entry.getValue()).append(" \n");
+            if (entry.getValue()) {
+                toReturn.append("\n</p><p>");
+                toReturn.append("URL ").append(entry.getKey()).append(" ").append(" IS <strong><a style=\"color: red;\">BANNED</a></strong>").append(" \n");
+            }
         }
         toReturn.append("\n</p>");
         return toReturn.toString();
@@ -72,7 +74,7 @@ public class ReportGenerator {
             } else if (entry.getValue().equalsIgnoreCase("Legitimate link")) {
                 toReturn.append(entry.getKey()).append(" <a style=\"color: green;\">is legitim link</a> ").append("\n");
             } else {
-                toReturn.append(entry.getKey()).append(" <a style=\"color: red;\">similar</a> to ").append(entry.getValue()).append("\n");
+                toReturn.append(entry.getKey()).append(" <strong><a style=\"color: red;\">SIMILAR</a></strong> ").append(entry.getValue()).append("\n");
             }
 
         }

@@ -126,8 +126,6 @@ public class MailData {
 
 
             int min_distance = Integer.MAX_VALUE;
-
-
             String most_similar = "None";
 
             for (String check : domainYaml.getList()) {
@@ -147,6 +145,12 @@ public class MailData {
 
             similar.put(domain, most_similar);
 
+            for (String bannedURI : domainYaml.getBanned()) {
+                if (bannedURI.equalsIgnoreCase(domain)) {
+                    this.banned.put(domain, true);
+                }
+            }
+
         }
 
     }
@@ -162,7 +166,6 @@ public class MailData {
         uri = uri.split("/")[0];
         return uri;
     }
-
 
 
     /**
