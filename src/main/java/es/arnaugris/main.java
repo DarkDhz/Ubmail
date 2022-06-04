@@ -11,9 +11,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-// https://metamug.com/article/java/build-run-java-maven-project-command-line.html
-// https://github.com/bcoe/secure-smtpd
-
 public class main {
 
     // mvn compile
@@ -26,7 +23,6 @@ public class main {
         System.setProperty("javax.net.ssl.keyStorePassword", "ubmail");
         //System.setProperty("javax.net.debug", "all");
 
-        ServerYaml server = null;
 
         try {
             ArrayList<YamlFile> configuration_files = new ArrayList<>();
@@ -41,32 +37,28 @@ public class main {
 
 
         } catch (FileNotFoundException ex) {
-            System.out.printf("Domains can't be loaded");
+            System.out.println("Configuration files can't be loaded");
             System.exit(0);
         }
 
-
-        server = ServerYaml.getInstance();
-
         try {
-            Proxy proxy = new Proxy(server.getIP(), server.getPort());
-            Thread t = new Thread(proxy);
-            t.start();
+            ServerYaml server = ServerYaml.getInstance();
+
+            ArrayList<Runnable> servers = new ArrayList<>();
+            // SMTP Server
+            servers.add(new Proxy(server.getIP(), server.getPort()));
+            // SMTP SSL Server
+            servers.add(new SSLProxy(server.getIP(), server.getSSlPort()));
+
+            for (Runnable threadServer : servers) {
+                Thread t = new Thread(threadServer);
+                t.start();
+            }
+
         } catch (IOException ex) {
             ex.printStackTrace();
-            System.out.println("cannot open the server on port 25");
+            System.out.println("cannot open the server");
         }
-
-
-        try {
-            SSLProxy sslProxy = new SSLProxy(server.getIP(), server.getSSlPort());
-            Thread t2 = new Thread(sslProxy);
-            t2.start();
-        } catch (IOException ex) {
-            System.out.println("cannot open the server on port 465");
-        }
-
-
 
     }
 }
