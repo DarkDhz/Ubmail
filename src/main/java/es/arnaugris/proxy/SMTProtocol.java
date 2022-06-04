@@ -1,56 +1,21 @@
 package es.arnaugris.proxy;
 
 
-import es.arnaugris.utils.smtp.ConsoleLogger;
-import es.arnaugris.utils.MailData;
-import es.arnaugris.utils.smtp.MailSender;
+import es.arnaugris.utils.smtp.ProtocolUtils;
 
-import javax.mail.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-public class SMTProtocol {
-
-    private final BufferedReader in;
-    private final BufferedWriter out;
-    private final MailData mail;
-    private boolean Ehlo = false;
-
-    private final ConsoleLogger consoleLogger;
+public class SMTProtocol extends ProtocolUtils {
 
     public SMTProtocol(BufferedReader reader, BufferedWriter writer) {
-        this.in = reader;
-        this.out = writer;
-        this.mail = new MailData();
-        this.consoleLogger = new ConsoleLogger();
-
-
-
+        super(reader, writer);
     }
 
-    public void handle() throws IOException {
-        String readed;
-        consoleLogger.printStart();
-        send("220 Hola buenas soy el servidor");
-
-        while (true) {
-            readed = this.read();
-
-            if (readed == null) {
-                throw new IOException("close socket");
-            }
-
-            response(readed);
-        }
-
-    }
-
-    private String split_message(String message) { return message.split(" ")[0]; }
-
-    private void response(String message) throws IOException {
-        // TODO TIMEOUT (5 minutes)
-        String opcode = split_message(message);
+    @Override
+    protected void response(String message) throws IOException {
+        String opcode = super.split_message(message);
 
         if (opcode.equalsIgnoreCase("EHLO")) {
             if (this.Ehlo) {
@@ -89,9 +54,8 @@ public class SMTProtocol {
             try {
 
                 consoleLogger.printReceived(mail.getMailFrom());
-                performPostMail();
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
+                super.performPostMail();
+            } catch (Exception ignored) {
             }
 
             throw new IOException("close socket");
@@ -100,19 +64,8 @@ public class SMTProtocol {
         }
     }
 
-    private void performPostMail() throws MessagingException {
-        MailSender.getInstance().sendReport(this.mail);
-        consoleLogger.printSended(mail.getMailFrom());
-
-    }
 
 
-    private void send(String message) throws IOException {
-        out.write(message + "\n");
-        out.flush();
-    }
 
-    private String read() throws IOException {
-        return in.readLine();
-    }
+
 }

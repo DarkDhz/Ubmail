@@ -129,7 +129,7 @@ public class mailtest {
         });
 
         Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress("from@gmail.com"));
+        message.setFrom(new InternetAddress("arnau.gris@gmail.com"));
         message.setRecipients(
                 Message.RecipientType.TO, InternetAddress.parse("to@gmail.com"));
         message.setSubject("Mail Subject");

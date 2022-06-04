@@ -1,9 +1,6 @@
 package es.arnaugris;
 
-import es.arnaugris.external.BlacklistYaml;
-import es.arnaugris.external.DomainYaml;
-import es.arnaugris.external.ServerYaml;
-import es.arnaugris.external.YamlFile;
+import es.arnaugris.external.*;
 import es.arnaugris.proxy.Proxy;
 import es.arnaugris.sslproxy.SSLProxy;
 
@@ -17,10 +14,10 @@ public class main {
     // mvn exec:java -Dexec.mainClass=es.arnaugris.main
 
     public static void main(String[] args) {
-        System.setProperty("javax.net.ssl.keyStore", "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\ubmail.jks");
+
         //System.setProperty("javax.net.ssl.trustStore", "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\ubmail_trust.jts");
         //System.setProperty("javax.net.ssl.trustStorePassword", "ubmail");
-        System.setProperty("javax.net.ssl.keyStorePassword", "ubmail");
+
         //System.setProperty("javax.net.debug", "all");
 
 
@@ -30,6 +27,7 @@ public class main {
             configuration_files.add(DomainYaml.getInstance());
             configuration_files.add(ServerYaml.getInstance());
             configuration_files.add(BlacklistYaml.getInstance());
+            configuration_files.add(CertificateYaml.getInstance());
 
             for (YamlFile file : configuration_files) {
                 file.load();
@@ -40,6 +38,10 @@ public class main {
             System.out.println("Configuration files can't be loaded");
             System.exit(0);
         }
+
+        CertificateYaml certificateYaml = CertificateYaml.getInstance();
+        System.setProperty("javax.net.ssl.keyStore", certificateYaml.getPath());
+        System.setProperty("javax.net.ssl.keyStorePassword", certificateYaml.getPassword());
 
         try {
             ServerYaml server = ServerYaml.getInstance();

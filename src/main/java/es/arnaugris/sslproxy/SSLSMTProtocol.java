@@ -1,7 +1,6 @@
 package es.arnaugris.sslproxy;
 
-import es.arnaugris.utils.MailData;
-import es.arnaugris.utils.server.SocketUtils;
+import es.arnaugris.utils.smtp.ProtocolUtils;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSocket;
@@ -10,45 +9,22 @@ import java.nio.charset.StandardCharsets;
 import java.security.cert.Certificate;
 import java.net.Socket;
 
-public class SSLSMTProtocol extends SocketUtils {
-
-    private final BufferedReader in;
-    private final BufferedWriter out;
+public class SSLSMTProtocol extends ProtocolUtils {
     private Socket socket;
-    private final MailData mail;
     private boolean reset = false;
 
     public SSLSMTProtocol(Socket socket) throws IOException {
+        super(new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8)), new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8)));
         this.socket = socket;
-        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-        this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
-        this.mail = new MailData();
     }
 
-    public void handle() throws IOException {
-        String readed;
-        send("220 Hola buenas soy el servidor");
-
-        while (true) {
-            readed = this.read();
-            System.out.println(readed);
-
-            if (readed == null) {
-                throw new IOException("close socket");
-            }
-
-            response(readed);
-        }
-
-    }
-
-    private String split_message(String message) { return message.split(" ")[0]; }
-
-    private void response(String message) throws IOException {
+    @Override
+    protected void response(String message) throws IOException {
         String opcode = split_message(message);
 
         if (opcode.equalsIgnoreCase("EHLO")) {
-            if (reset) {
+            if (super.Ehlo) {
+                mail.clear();
                 this.send("250 ubmail");
             } else {
                 //USE TLS
@@ -58,7 +34,10 @@ public class SSLSMTProtocol extends SocketUtils {
                 this.send("250-PIPELINING");
                 this.send("250-STARTTLS");
                 this.send("250 HELP");
+                this.Ehlo = true;
             }
+        } else if (!this.Ehlo) {
+            this.send("503 Invalid secuence of commands");
         } else if (opcode.equalsIgnoreCase("STARTTLS")) {
             if (socket instanceof SSLSocket) {
                 this.send("454 TLS ALREADY ACTIVE");
@@ -70,7 +49,10 @@ public class SSLSMTProtocol extends SocketUtils {
 
             socket = s;
 
-            reset = true;
+            super.in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+            super.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+
+            super.Ehlo = true;
             //sess.setTlsStarted(true);
 
             if (s.getNeedClientAuth())
@@ -85,34 +67,32 @@ public class SSLSMTProtocol extends SocketUtils {
         } else if (opcode.equalsIgnoreCase("AUTH")) {
             this.send("235 2.7.0 Authentication successful");
         } else if (opcode.equalsIgnoreCase("MAIL")) {
-            this.send("250 OK");
             mail.clearAndSetMail_from(message);
-        } else if (opcode.equalsIgnoreCase("RCPT")) {
             this.send("250 OK");
+        } else if (opcode.equalsIgnoreCase("RCPT")) {
             mail.clearAndAddMail_to(message);
+            this.send("250 OK");
+        } else if (opcode.equalsIgnoreCase("RSET")) {
+            this.send("250 OK");
+            mail.clear();
+        } else if (opcode.equalsIgnoreCase("NOOP")) {
+            this.send("250 OK");
         } else if (opcode.equalsIgnoreCase("DATA")) {
             this.send("354 OK");
         } else if (opcode.equalsIgnoreCase(".")) {
             this.send("250 OK");
         } else if (opcode.equalsIgnoreCase("QUIT")) {
             this.send("221 Bye");
-            System.out.println(mail.getMailFrom());
-            System.out.println(mail.getMailTo());
-            System.out.println(mail.getData());
+            try {
+                consoleLogger.printReceived(mail.getMailFrom());
+                performPostMail();
+            } catch (Exception ignored) {
+            }
+
             throw new IOException("close socket");
         } else {
             mail.addData(message);
         }
-    }
-
-
-    private void send(String message) throws IOException {
-        out.write(message + "\n");
-        out.flush();
-    }
-
-    private String read() throws IOException {
-        return in.readLine();
     }
 
 }

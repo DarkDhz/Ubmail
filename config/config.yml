@@ -16,3 +16,8 @@ banned_domains:
     - 'uab.edu'
 blacklist:
   api_key: "AzKegv6KxuwTqWJNl9Iahgk0eul6iw14"
+ssl:
+  local: "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\ubmail.jks"
+  remote: "/home/debian/java/crtf"
+  certificate_path: "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\ubmail.jks"
+  pass: "ubmail"
