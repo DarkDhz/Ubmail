@@ -62,27 +62,24 @@ public class SMTProtocol {
             if (this.Ehlo) {
                 mail.clear();
             }
-            //this.send("250 ubmail");
+            this.send("250 ubmail");
 
-            this.send("250-smtp.arnaugris.es Hello client");
-            this.send("250 AUTH GSSAPI DIGEST-MD5 PLAIN");
+            //this.send("250-smtp.arnaugris.es Hello client");
+            //this.send("250 AUTH GSSAPI DIGEST-MD5 PLAIN");
             this.Ehlo = true;
         } else if (!this.Ehlo) {
             this.send("503 Invalid secuence of commands");
         } else if (opcode.equalsIgnoreCase("VRFY")) {
             this.send("250 OK");
-            // smtp protocol without encryption
-        //} else if (opcode.equalsIgnoreCase("STARTTLS")) {
-        //    this.send("220 TLS go ahead");
         } else if (opcode.equalsIgnoreCase("AUTH")) {
             mail.auth(message);
             this.send("235 2.7.0 Authentication successful");
         } else if (opcode.equalsIgnoreCase("MAIL")) {
-            this.send("250 OK");
             mail.clearAndSetMail_from(message);
-        } else if (opcode.equalsIgnoreCase("RCPT")) {
             this.send("250 OK");
+        } else if (opcode.equalsIgnoreCase("RCPT")) {
             mail.clearAndAddMail_to(message);
+            this.send("250 OK");
         } else if (opcode.equalsIgnoreCase("RSET")) {
             this.send("250 OK");
             mail.clear();

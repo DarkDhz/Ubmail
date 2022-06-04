@@ -1,5 +1,6 @@
 package es.arnaugris;
 
+import es.arnaugris.external.BlacklistYaml;
 import es.arnaugris.external.DomainYaml;
 import es.arnaugris.external.ServerYaml;
 import es.arnaugris.proxy.Proxy;
@@ -26,9 +27,12 @@ public class main {
         ServerYaml server = null;
 
         try {
-            DomainYaml domains = DomainYaml.getInstance();
+            DomainYaml.getInstance().load();
+
             server = ServerYaml.getInstance();
-            domains.load();
+
+            BlacklistYaml.getInstance().load();
+
         } catch (FileNotFoundException ex) {
             System.out.printf("Domains can't be loaded");
             System.exit(0);

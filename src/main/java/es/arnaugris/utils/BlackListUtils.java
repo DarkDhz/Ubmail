@@ -1,5 +1,7 @@
 package es.arnaugris.utils;
 
+import es.arnaugris.external.BlacklistYaml;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,7 +15,7 @@ public class BlackListUtils {
 
     // here input you api key from BlacklistMaster
     // www.blacklistmaster.com
-    private final String api_key = "7jL0GedmCBjSBNro5Vcjxy3Udffdg660";
+    private final String api_key = BlacklistYaml.getInstance().getKey();
 
     private BlackListUtils() {
 

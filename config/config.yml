@@ -9,3 +9,5 @@ domain_check:
     - "ub.edu"
     - "campusvirtual.ub.edu"
     - "www.ub.edu"
+blacklist:
+  api_key: "7jL0GedmCBjSBNro5Vcjxy3Udffdg660"
