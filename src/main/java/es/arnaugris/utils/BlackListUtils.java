@@ -1,12 +1,14 @@
 package es.arnaugris.utils;
 
 import es.arnaugris.external.BlacklistYaml;
+import es.arnaugris.external.DomainYaml;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class BlackListUtils {
 
@@ -43,6 +45,8 @@ public class BlackListUtils {
      * @return The request URL
      */
     private String formatURL(String domain) {
+        https://www.blacklistmaster.com/restapi/v1/blacklistcheck/domain/casacam.net?apikey=AzKegv6KxuwTqWJNl9Iahgk0eul6iw14
+
         return "https://www.blacklistmaster.com/restapi/v1/blacklistcheck/domain/" + domain + "?apikey=" + this.api_key;
     }
 
@@ -109,6 +113,15 @@ public class BlackListUtils {
         }
         if (url.contains("su.pr")) {
             return true;
+        }
+        return false;
+    }
+
+    public boolean isBanned(String domain) {
+        for (String bannedDomain : DomainYaml.getInstance().getBanned()) {
+            if (bannedDomain.equalsIgnoreCase(domain)) {
+                return true;
+            }
         }
         return false;
     }

@@ -9,5 +9,9 @@ domain_check:
     - "ub.edu"
     - "campusvirtual.ub.edu"
     - "www.ub.edu"
+banned_domains:
+  domains:
+    - 'upc.edu'
+    - 'uab.edu'
 blacklist:
-  api_key: "7jL0GedmCBjSBNro5Vcjxy3Udffdg660"
+  api_key: "AzKegv6KxuwTqWJNl9Iahgk0eul6iw14"

@@ -3,11 +3,13 @@ package es.arnaugris;
 import es.arnaugris.external.BlacklistYaml;
 import es.arnaugris.external.DomainYaml;
 import es.arnaugris.external.ServerYaml;
+import es.arnaugris.external.YamlFile;
 import es.arnaugris.proxy.Proxy;
 import es.arnaugris.sslproxy.SSLProxy;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 // https://metamug.com/article/java/build-run-java-maven-project-command-line.html
 // https://github.com/bcoe/secure-smtpd
@@ -27,17 +29,24 @@ public class main {
         ServerYaml server = null;
 
         try {
-            DomainYaml.getInstance().load();
+            ArrayList<YamlFile> configuration_files = new ArrayList<>();
 
-            server = ServerYaml.getInstance();
+            configuration_files.add(DomainYaml.getInstance());
+            configuration_files.add(ServerYaml.getInstance());
+            configuration_files.add(BlacklistYaml.getInstance());
 
-            BlacklistYaml.getInstance().load();
+            for (YamlFile file : configuration_files) {
+                file.load();
+            }
+
 
         } catch (FileNotFoundException ex) {
             System.out.printf("Domains can't be loaded");
             System.exit(0);
         }
 
+
+        server = ServerYaml.getInstance();
 
         try {
             Proxy proxy = new Proxy(server.getIP(), server.getPort());

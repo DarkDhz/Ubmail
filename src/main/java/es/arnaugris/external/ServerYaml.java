@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Map;
 
-public class ServerYaml {
+public class ServerYaml implements YamlFile{
 
     private static volatile ServerYaml instance = null;
 
@@ -15,9 +15,9 @@ public class ServerYaml {
     private int port;
     private int ssl_port;
 
-    private ServerYaml() throws FileNotFoundException { this.load();}
+    private ServerYaml() { }
 
-    public static ServerYaml getInstance() throws FileNotFoundException {
+    public static ServerYaml getInstance() {
         // To ensure only one instance is created
         if (instance == null) {
             synchronized (ServerYaml.class) {

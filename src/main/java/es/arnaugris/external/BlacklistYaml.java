@@ -8,15 +8,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class BlacklistYaml {
+public class BlacklistYaml implements YamlFile {
 
     // Singleton Instance
     private static volatile BlacklistYaml instance = null;
 
     private String api_key;
-
-
-
 
     private BlacklistYaml() {
     }
@@ -46,8 +43,6 @@ public class BlacklistYaml {
         Map<String, Object> info = (Map<String, Object>) data.get("blacklist");
 
         this.api_key = (String) info.get("api_key");
-
-
     }
 
 }
