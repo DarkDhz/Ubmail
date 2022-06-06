@@ -1,6 +1,8 @@
 package es.arnaugris;
 
 import es.arnaugris.external.*;
+import es.arnaugris.factory.ProxyFactory;
+import es.arnaugris.factory.ProxyType;
 import es.arnaugris.proxy.Proxy;
 import es.arnaugris.sslproxy.SSLProxy;
 
@@ -47,13 +49,14 @@ public class main {
         // https://www.sparkpost.com/blog/what-smtp-port/#:~:text=IANA%20initially%20assigned%20port%20465,Secure%20Sockets%20Layer%20(SSL).
 
         try {
-            ServerYaml server = ServerYaml.getInstance();
+
 
             ArrayList<Runnable> servers = new ArrayList<>();
+            ProxyFactory proxyFactory = ProxyFactory.getInstance();
             // SMTP Server
-            servers.add(new Proxy(server.getIP(), server.getPort()));
+            servers.add(proxyFactory.createProxy(ProxyType.NORMAL));
             // SMTP SSL Server
-            servers.add(new SSLProxy(server.getIP(), server.getSSlPort()));
+            servers.add(proxyFactory.createProxy(ProxyType.TLS));
 
             for (Runnable threadServer : servers) {
                 Thread t = new Thread(threadServer);

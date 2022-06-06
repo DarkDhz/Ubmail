@@ -21,7 +21,7 @@ public class SMTProtocol extends ProtocolUtils {
             if (this.Ehlo) {
                 mail.clear();
             }
-            this.send("250 ubmail");
+            this.send("250 smtp.arnaugris.es Hello client");
 
             //this.send("250-smtp.arnaugris.es Hello client");
             //this.send("250 AUTH GSSAPI DIGEST-MD5 PLAIN");
