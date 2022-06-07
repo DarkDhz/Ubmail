@@ -46,8 +46,6 @@ public class BlackListUtils {
      * @return The request URL
      */
     private String formatURL(String domain) {
-        https://www.blacklistmaster.com/restapi/v1/blacklistcheck/domain/casacam.net?apikey=AzKegv6KxuwTqWJNl9Iahgk0eul6iw14
-
         return "https://www.blacklistmaster.com/restapi/v1/blacklistcheck/domain/" + domain + "?apikey=" + this.api_key;
     }
 
@@ -74,7 +72,7 @@ public class BlackListUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(result.toString());
+
         return convertBlacklistToMap(result.toString());
     }
 
