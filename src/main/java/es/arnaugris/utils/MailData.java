@@ -30,6 +30,8 @@ public class MailData {
 
     private final ArrayList<String> hidden;
 
+    private final ArrayList<String> shorten_urls;
+
 
     /**
      * Default class builder
@@ -43,6 +45,7 @@ public class MailData {
         similar = new HashMap<>();
         banned = new HashMap<>();
         hidden = new ArrayList<>();
+        shorten_urls = new ArrayList<>();
     }
 
     /**
@@ -126,6 +129,7 @@ public class MailData {
                 }
 
                 if (!uri.equalsIgnoreCase(real_url)) {
+                    this.shorten_urls.add(uri);
                     this.shorten.put(uri, real_url);
                     copy.add(real_url);
                 }
@@ -214,6 +218,7 @@ public class MailData {
         StringBuilder message = new StringBuilder();
 
         for (Object line : data) {
+
             if (line instanceof String) {
                 String line_string = (String) line;
                 if (boundary != null) {
@@ -253,6 +258,7 @@ public class MailData {
                 word = word.replaceAll("\"", "");
                 hidden = true;
             }
+
             try {
                 URL url = new URL(word);
                 if ((word.contains("https:=")) || (word.contains("mailto:")) || (word.contains("tlf:"))) {
@@ -260,6 +266,7 @@ public class MailData {
                 }
 
                 word = word.replaceAll(" ", "");
+
                 if (!urls.contains(word)) {
                     urls.add(word);
                     if (hidden) {
@@ -295,6 +302,10 @@ public class MailData {
     }
 
     public ArrayList<String> getHidden() { return this.hidden; }
+
+    public ArrayList<String> getShorten_urls() {
+        return shorten_urls;
+    }
 
     /**
      * Method to get the URLs

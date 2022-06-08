@@ -22,6 +22,7 @@ public class ReportGenerator {
                 this.generateBanned() +
                 this.generateSimilar() +
                 this.generateShorten() +
+                this.generateShortenCorrespondencies() +
                 this.generateURLS();
 
         return toReturn;
@@ -94,14 +95,26 @@ public class ReportGenerator {
         return toReturn.toString();
     }
 
-    private String generateShorten() {
-        StringBuilder toReturn = new StringBuilder("<p>----------------- SHORTEN -----------------");
+    private String generateShortenCorrespondencies() {
+        StringBuilder toReturn = new StringBuilder("<p>----------------- REAL URLS -----------------");
 
         Map<String, String> shorten = data.getShorten();
 
         for (Map.Entry<String, String> entry : shorten.entrySet()) {
             toReturn.append("\n</p><p>");
             toReturn.append("URL ").append(entry.getKey()).append(" ").append(" IN REAL IS ").append(entry.getValue()).append(" \n");
+        }
+        toReturn.append("\n</p>");
+        return toReturn.toString();
+
+    }
+
+    private String generateShorten() {
+        StringBuilder toReturn = new StringBuilder("<p>----------------- SHORTEN -----------------");
+
+        for (String uri : data.getShorten_urls()) {
+            toReturn.append("\n</p><p>");
+            toReturn.append(uri).append(" IS USING <strong><a style=\"color: red;\">SHORTEN SERVICE</a>").append(" \n");
         }
         toReturn.append("\n</p>");
         return toReturn.toString();
