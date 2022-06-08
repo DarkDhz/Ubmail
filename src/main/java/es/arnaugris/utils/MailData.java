@@ -1,5 +1,8 @@
 package es.arnaugris.utils;
 
+import com.linkedin.urls.Url;
+import com.linkedin.urls.detection.UrlDetector;
+import com.linkedin.urls.detection.UrlDetectorOptions;
 import es.arnaugris.external.DomainYaml;
 import es.arnaugris.sql.SQLUtils;
 import es.arnaugris.utils.checks.BlackListUtils;
@@ -10,10 +13,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MailData {
 
@@ -268,8 +268,8 @@ public class MailData {
                             complete_string += line_string;
                             System.out.println(complete_string);
                         }*/
-
-                        extractURL(line_string);
+                        extractURLV2(line_string);
+                        //extractURL(line_string);
                         message.append(line_string).append("\n");
                     }
                 } else {
@@ -286,6 +286,14 @@ public class MailData {
         return message.toString();
     }
 
+
+
+    private void extractURLV2(String line) {
+        UrlDetector parser = new UrlDetector(line, UrlDetectorOptions.Default);
+        for (Url uri : parser.detect()) {
+            this.urls.add(uri.toString());
+        }
+    }
 
     /**
      * Method to extract URLs from messages

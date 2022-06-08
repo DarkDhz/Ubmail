@@ -51,6 +51,11 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/dependency/mysql-connector.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>com.linkedin.urls</groupId>
+            <artifactId>url-detector</artifactId>
+            <version>0.1.17</version>
+        </dependency>
 
     </dependencies>
 
