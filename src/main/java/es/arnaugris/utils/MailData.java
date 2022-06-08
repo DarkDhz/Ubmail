@@ -1,12 +1,14 @@
 package es.arnaugris.utils;
 
 import es.arnaugris.external.DomainYaml;
+import es.arnaugris.sql.SQLUtils;
 import es.arnaugris.utils.checks.BlackListUtils;
 import es.arnaugris.utils.checks.Levenshtein;
 import es.arnaugris.utils.smtp.ReportGenerator;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -17,7 +19,7 @@ public class MailData {
 
     private String mail_from;
     private final ArrayList<String> mail_to;
-    private final ArrayList<Object> data;
+    private final ArrayList<String> data;
     private String username;
     private String password;
 
@@ -117,6 +119,7 @@ public class MailData {
         BlackListUtils blackListUtils = BlackListUtils.getInstance();
         Levenshtein lev = Levenshtein.getInstance();
         DomainYaml domainYaml = DomainYaml.getInstance();
+        SQLUtils sqlUtils = SQLUtils.getInstance();
 
 
         ArrayList<String> copy = new ArrayList<>();
@@ -163,7 +166,7 @@ public class MailData {
             int min_distance = Integer.MAX_VALUE;
             String most_similar = "None";
 
-            for (String check : domainYaml.getList()) {
+            for (String check : sqlUtils.getList()) {
 
 
                 int distance = lev.levenshtein(check, domain);
@@ -180,7 +183,7 @@ public class MailData {
 
             similar.put(domain, most_similar);
 
-            for (String bannedURI : domainYaml.getBanned()) {
+            for (String bannedURI : sqlUtils.getBanned()) {
                 if (bannedURI.equalsIgnoreCase(domain)) {
                     this.banned.put(domain, true);
                 }
@@ -217,28 +220,68 @@ public class MailData {
         boolean reading = false;
         StringBuilder message = new StringBuilder();
 
-        for (Object line : data) {
+        String complete_string = null;
 
-            if (line instanceof String) {
-                String line_string = (String) line;
-                if (boundary != null) {
-                    if (reading) {
-                        if (line_string.contains(end_boundary)) {
-                            reading = false;
-                        } else {
-                            extractURL(line_string);
-                            message.append(line_string).append("\n");
-                        }
+        for (String line_string : data) {
+
+            if (boundary != null) {
+
+                if (reading) {
+                    if (line_string.contains(end_boundary)) {
+                        reading = false;
+                        boundary = null;
                     } else {
-                        if (line_string.contains(boundary)) {
-                            reading = true;
+
+                        /*if (complete_string == null && line_string.contains("http")) {
+                            System.out.println("hola");
+                            System.out.println(line_string);
+                            complete_string = line_string;
                         }
+                        if (complete_string != null && line_string.contains(" ")) {
+                            //System.out.println("hola2");
+
+                            String[] temp = complete_string.split(" ");
+                            complete_string += temp[0];
+
+                            System.out.println("LAST LINE");
+                            System.out.println(line_string);
+
+
+                            extractURL(complete_string);
+
+                            if (temp[temp.length-1].contains("http")) {
+                                complete_string = temp[temp.length-1];
+                            } else {
+                                complete_string = null;
+                            }
+
+                            System.out.println("Completed string");
+                            System.out.println(complete_string);
+                            break;
+
+
+
+                        } else if (complete_string != null) {
+                            System.out.println("hola3");
+                            System.out.println("new line");
+                            System.out.println(line_string);
+                            complete_string += line_string;
+                            System.out.println(complete_string);
+                        }*/
+
+                        extractURL(line_string);
+                        message.append(line_string).append("\n");
                     }
-                } else if (line_string.contains("boundary")) {
-                    boundary = line_string.split("boundary=")[1].replaceAll("\"", "");
-                    end_boundary = boundary + "--";
+                } else {
+                    if (line_string.contains(boundary)) {
+                        reading = true;
+                    }
                 }
+            } else if (line_string.contains("boundary")) {
+                boundary = line_string.split("boundary=")[1].replaceAll("\"", "");
+                end_boundary = boundary + "--";
             }
+
         }
         return message.toString();
     }
@@ -250,6 +293,9 @@ public class MailData {
      */
     private void extractURL(String line) {
         boolean hidden = false;
+        if (line.contains("<") && line.contains(">")) {
+            hidden = true;
+        }
         line = line.replaceAll(">", " ").replaceAll("<", " ");
         for (String word : line.split(" ")) {
             if (word.contains("href")) {
@@ -343,7 +389,7 @@ public class MailData {
      * Method to get the body of the mail (message)
      * @return List of message lines
      */
-    public ArrayList<Object> getData() {
+    public ArrayList<String> getData() {
         return this.data;
     }
 

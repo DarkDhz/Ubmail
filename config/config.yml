@@ -6,15 +6,6 @@ server:
   ssl_port: 465
 domain_check:
   sensitive: 5
-  domains:
-    - "ub.edu"
-    - "campusvirtual.ub.edu"
-    - "www.ub.edu"
-banned_domains:
-  domains:
-    - 'upc.edu'
-    - 'www.upc.edu'
-    - 'uab.edu'
 blacklist:
   api_key: "AzKegv6KxuwTqWJNl9Iahgk0eul6iw14"
 ssl:

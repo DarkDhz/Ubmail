@@ -133,6 +133,7 @@ public class BlackListUtils {
     }
 
     public String getRealURL(String link) {
+        //https://onesimpleapi.com/api/unshorten?token=64tNM9WaiGe6EX23cGSI6ZDfqRtqPgJlF866CAcW&url=<url>
         URLConnection conn;
         try {
             URL inputURL = new URL(link);
@@ -146,12 +147,4 @@ public class BlackListUtils {
         return null;
     }
 
-    public boolean isBanned(String domain) {
-        for (String bannedDomain : DomainYaml.getInstance().getBanned()) {
-            if (bannedDomain.equalsIgnoreCase(domain)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

@@ -4,6 +4,7 @@ import es.arnaugris.external.*;
 import es.arnaugris.factory.ProxyFactory;
 import es.arnaugris.factory.ProxyType;
 import es.arnaugris.proxy.Proxy;
+import es.arnaugris.sql.SQLoader;
 import es.arnaugris.sslproxy.SSLProxy;
 
 import java.io.FileNotFoundException;
@@ -57,6 +58,8 @@ public class main {
             servers.add(proxyFactory.createProxy(ProxyType.NORMAL));
             // SMTP SSL Server
             servers.add(proxyFactory.createProxy(ProxyType.TLS));
+            // FILE TIMER LOADER
+            servers.add(new SQLoader());
 
             for (Runnable threadServer : servers) {
                 Thread t = new Thread(threadServer);
