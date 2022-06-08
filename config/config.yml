@@ -4,6 +4,7 @@ server:
   remote: "54.36.191.29"
   port: 25
   ssl_port: 465
+  tls_port: 587
 domain_check:
   sensitive: 5
 blacklist:
