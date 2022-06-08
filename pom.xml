@@ -45,11 +45,9 @@
             <version>2.10.3</version>
         </dependency>
         <dependency>
-            <groupId>mysql.driver</groupId>
-            <artifactId>mysql</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/dependency/mysql-connector.jar</systemPath>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.29</version>
         </dependency>
         <dependency>
             <groupId>com.linkedin.urls</groupId>
