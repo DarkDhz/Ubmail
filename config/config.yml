@@ -16,3 +16,12 @@ ssl:
   remote: "/home/debian/java/crtf"
   certificate_path: "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\ubmail.jks"
   pass: "ubmail"
+mail:
+  username: "postmaster@darkhorizon.es"
+  password: "ubmail12345"
+mysql:
+  host: "54.36.191.29"
+  port: 3306
+  username: "root"
+  password: "ubending"
+  database: "ubmail"

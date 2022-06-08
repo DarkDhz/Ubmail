@@ -1,8 +1,8 @@
 package es.arnaugris.external;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public interface YamlFile {
 
-    void load() throws FileNotFoundException;
+    void load() throws IOException;
 }

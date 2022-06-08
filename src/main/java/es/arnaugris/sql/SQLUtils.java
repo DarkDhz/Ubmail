@@ -1,5 +1,7 @@
 package es.arnaugris.sql;
 
+import es.arnaugris.external.SQLYaml;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -7,13 +9,8 @@ public class SQLUtils {
 
     private static volatile SQLUtils instance = null;
 
-    private final String host = "54.36.191.29";
-    private final String user = "root";
-    private final String password = "ubending";
-    private final String database = "ubmail";
-
-    private ArrayList<String> domains;
-    private ArrayList<String> banned;
+    private final ArrayList<String> domains;
+    private final ArrayList<String> banned;
 
     private SQLUtils() {
         domains = new ArrayList<>();
@@ -34,9 +31,15 @@ public class SQLUtils {
     }
 
     private Connection generateConnection() throws ClassNotFoundException, SQLException {
+        SQLYaml sqlYaml = SQLYaml.getInstance();
         Class.forName("com.mysql.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database, user, password);
-        return con;
+        String host = "54.36.191.29";
+        String user = "root";
+        String password = "ubending";
+        String database = "ubmail";
+
+        return DriverManager.getConnection("jdbc:mysql://" + sqlYaml.getHost() + ":" + sqlYaml.getPort() + "/" + sqlYaml.getDb(),
+                sqlYaml.getUsername(), sqlYaml.getPassword());
 
     }
 

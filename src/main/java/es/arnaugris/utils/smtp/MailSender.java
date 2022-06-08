@@ -1,5 +1,6 @@
 package es.arnaugris.utils.smtp;
 
+import es.arnaugris.external.MailYaml;
 import es.arnaugris.utils.MailData;
 
 import javax.mail.*;
@@ -14,8 +15,6 @@ public class MailSender {
     // Singleton Instance
     private static volatile MailSender instance = null;
 
-    private String mailUser = "postmaster@darkhorizon.es";
-    private String mailPassword = "ubmail12345";
     private MailSender() {
 
     }
@@ -44,8 +43,9 @@ public class MailSender {
         prop.put("mail.smtp.ssl.protocols", "TLSv1.2");
         prop.put("mail.smtp.ssl.trust", "ssl0.ovh.net");
 
-        String from = this.mailUser;
-        String pass = this.mailPassword;
+        MailYaml mailYaml = MailYaml.getInstance();
+        String from = mailYaml.getUsername();
+        String pass = mailYaml.getPassword();
 
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override

@@ -5,10 +5,8 @@ import es.arnaugris.utils.MailData;
 import java.util.Map;
 
 public class ReportGenerator {
-    // Singleton Instance
-    private static volatile ReportGenerator instance = null;
 
-    private MailData data;
+    private final MailData data;
 
     public ReportGenerator(MailData d) {
         this.data = d;
@@ -16,16 +14,14 @@ public class ReportGenerator {
 
     public String generateHTMLReport() {
 
-        String toReturn = this.generateHeader() +
-                this.generateHidden() +
+        return this.generateHeader() +
+                //this.generateHidden() +
                 this.generateBlacklist() +
                 this.generateBanned() +
                 this.generateSimilar() +
                 this.generateShorten() +
-                this.generateShortenCorrespondencies() +
+                this.generateShortenCorrespondences() +
                 this.generateURLS();
-
-        return toReturn;
     }
 
     private String generateHeader() {
@@ -95,7 +91,7 @@ public class ReportGenerator {
         return toReturn.toString();
     }
 
-    private String generateShortenCorrespondencies() {
+    private String generateShortenCorrespondences() {
         StringBuilder toReturn = new StringBuilder("<p>----------------- REAL URLS -----------------");
 
         Map<String, String> shorten = data.getShorten();

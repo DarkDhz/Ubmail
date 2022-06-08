@@ -1,15 +1,11 @@
 package es.arnaugris.utils.checks;
 
 import es.arnaugris.external.BlacklistYaml;
-import es.arnaugris.external.DomainYaml;
 
-import javax.xml.transform.Result;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -23,6 +19,8 @@ public class BlackListUtils {
     // here input you api key from BlacklistMaster
     // www.blacklistmaster.com
     private final String api_key = BlacklistYaml.getInstance().getKey();
+
+    private final String shorten_key = BlacklistYaml.getInstance().getShortenKey();
 
     private BlackListUtils() {
 
@@ -57,7 +55,7 @@ public class BlackListUtils {
      * Check domain reputation and if it is in a blacklist
      * @param domain The domain to check
      * @return 0 if not danger 1 if domain is dangerous
-     * @throws IOException
+     * @throws IOException Error while performing ops
      */
     public Map<String, String> checkDomain(String domain) throws IOException {
 
@@ -129,10 +127,7 @@ public class BlackListUtils {
         if (url.contains("rebrand.ly")) {
             return true;
         }
-        if (url.contains("su.pr")) {
-            return true;
-        }
-        return false;
+        return url.contains("su.pr");
     }
 
     public String getRealURL(String link) {
@@ -151,8 +146,7 @@ public class BlackListUtils {
     }
 
     public String getRealURLV2(String shorten) throws IOException {
-        String shortenToken = "64tNM9WaiGe6EX23cGSI6ZDfqRtqPgJlF866CAcW";
-        String destiny = "https://onesimpleapi.com/api/unshorten?token=" + shortenToken + "&url=" + shorten;
+        String destiny = "https://onesimpleapi.com/api/unshorten?token=" + this.shorten_key + "&url=" + shorten;
 
         StringBuilder result = new StringBuilder();
 

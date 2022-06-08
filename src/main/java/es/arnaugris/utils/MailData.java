@@ -262,8 +262,9 @@ public class MailData {
                 if ((word.contains("https:=")) || (word.contains("mailto:")) || (word.contains("tlf:")) || (!word.contains("."))) {
                     continue;
                 }
-                if (!urls.contains(uri.toString())) {
-                    this.urls.add(uri.toString());
+                if (!urls.contains(word)) {
+                    word = word.replaceAll(" ", "").replaceAll("/n", "").replaceAll("/r", "").replaceAll("=20", "");
+                    this.urls.add(word);
                 }
             } catch (MalformedURLException e) {
                 continue;

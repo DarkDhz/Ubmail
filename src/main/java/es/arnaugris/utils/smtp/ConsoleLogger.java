@@ -26,7 +26,7 @@ public class ConsoleLogger {
         if (debug) System.out.println("(" + this.getActualTime() +  " ID " + this.id + ") MAIL RECEIVED FROM " + from);
     }
 
-    public void printSended(String from) {
+    public void printSent(String from) {
         if (debug) System.out.println("(" + this.getActualTime() +  " ID " + this.id + ") REPORT SENT TO " + from);
     }
 }

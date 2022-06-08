@@ -11,7 +11,6 @@ import java.net.Socket;
 
 public class SSLSMTProtocol extends ProtocolUtils {
     private Socket socket;
-    private boolean reset = false;
 
     public SSLSMTProtocol(Socket socket) throws IOException {
         super(new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8)), new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8)));
@@ -37,7 +36,7 @@ public class SSLSMTProtocol extends ProtocolUtils {
                 this.Ehlo = true;
             }
         } else if (!this.Ehlo) {
-            this.send("503 Invalid secuence of commands");
+            this.send("503 Invalid sequence of commands");
         } else if (opcode.equalsIgnoreCase("STARTTLS")) {
             if (socket instanceof SSLSocket) {
                 this.send("454 TLS ALREADY ACTIVE");

@@ -31,13 +31,15 @@ public class main {
             configuration_files.add(ServerYaml.getInstance());
             configuration_files.add(BlacklistYaml.getInstance());
             configuration_files.add(CertificateYaml.getInstance());
+            configuration_files.add(MailYaml.getInstance());
+            configuration_files.add(SQLYaml.getInstance());
 
             for (YamlFile file : configuration_files) {
                 file.load();
             }
 
 
-        } catch (FileNotFoundException ex) {
+        } catch (Exception ex) {
             System.out.println("Configuration files can't be loaded");
             System.exit(0);
         }

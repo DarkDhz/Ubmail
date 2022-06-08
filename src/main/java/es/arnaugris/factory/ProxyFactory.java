@@ -4,7 +4,6 @@ package es.arnaugris.factory;
 import es.arnaugris.external.ServerYaml;
 import es.arnaugris.proxy.Proxy;
 import es.arnaugris.sslproxy.SSLProxy;
-import es.arnaugris.utils.checks.Levenshtein;
 
 import java.io.IOException;
 
@@ -34,8 +33,11 @@ public class ProxyFactory {
         switch (type)  {
             case NORMAL:
                 return new Proxy(server.getIP(), server.getPort());
-            case TLS:
+            case SSL:
                 return new SSLProxy(server.getIP(), server.getSSlPort());
+            case TLS:
+                return new SSLProxy(server.getIP(), server.getTLSPort());
+
             default:
                 return null;
         }

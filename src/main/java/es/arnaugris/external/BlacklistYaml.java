@@ -4,7 +4,10 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -14,6 +17,7 @@ public class BlacklistYaml implements YamlFile {
     private static volatile BlacklistYaml instance = null;
 
     private String api_key;
+    private String shorten_key;
 
     private BlacklistYaml() {
     }
@@ -34,15 +38,23 @@ public class BlacklistYaml implements YamlFile {
         return this.api_key;
     }
 
-    public void load() throws FileNotFoundException {
+    public String getShortenKey() {
+        return this.shorten_key;
+    }
 
-        InputStream inputStream = new FileInputStream("config/config.yml");
+    public void load() throws IOException {
+
+        InputStream inputStream = Files.newInputStream(Paths.get("config/config.yml"));
 
         Yaml yaml = new Yaml();
         Map<String, Object> data = yaml.load(inputStream);
         Map<String, Object> info = (Map<String, Object>) data.get("blacklist");
 
         this.api_key = (String) info.get("api_key");
+
+        info = (Map<String, Object>) data.get("shorten");
+
+        this.shorten_key = (String) info.get("api_key");
     }
 
 }

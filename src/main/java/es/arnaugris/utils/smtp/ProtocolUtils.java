@@ -1,8 +1,6 @@
 package es.arnaugris.utils.smtp;
 
 import es.arnaugris.utils.MailData;
-import es.arnaugris.utils.smtp.ConsoleLogger;
-import es.arnaugris.utils.smtp.MailSender;
 
 import javax.mail.MessagingException;
 import javax.net.ssl.SSLSocket;
@@ -48,7 +46,7 @@ public abstract class ProtocolUtils {
 
     protected void performPostMail() throws MessagingException {
         MailSender.getInstance().sendReport(this.mail);
-        consoleLogger.printSended(mail.getMailFrom());
+        consoleLogger.printSent(mail.getMailFrom());
 
     }
 

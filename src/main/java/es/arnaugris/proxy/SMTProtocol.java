@@ -25,7 +25,7 @@ public class SMTProtocol extends ProtocolUtils {
 
             this.Ehlo = true;
         } else if (!this.Ehlo) {
-            this.send("503 Invalid secuence of commands");
+            this.send("503 Invalid sequence of commands");
         } else if (opcode.equalsIgnoreCase("VRFY")) {
             this.send("250 OK");
         } else if (opcode.equalsIgnoreCase("MAIL")) {
