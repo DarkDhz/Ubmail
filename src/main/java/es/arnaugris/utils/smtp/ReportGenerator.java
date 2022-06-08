@@ -97,13 +97,11 @@ public class ReportGenerator {
     private String generateShorten() {
         StringBuilder toReturn = new StringBuilder("<p>----------------- SHORTEN -----------------");
 
-        Map<String, Boolean> shorten = data.getShorten();
+        Map<String, String> shorten = data.getShorten();
 
-        for (Map.Entry<String, Boolean> entry : shorten.entrySet()) {
-            if (entry.getValue()) {
-                toReturn.append("\n</p><p>");
-                toReturn.append("URL ").append(entry.getKey()).append(" ").append(" IS <a style=\"color: red;\">SHORTENED</a>").append(" \n");
-            }
+        for (Map.Entry<String, String> entry : shorten.entrySet()) {
+            toReturn.append("\n</p><p>");
+            toReturn.append("URL ").append(entry.getKey()).append(" ").append(" IN REAL IS ").append(entry.getValue()).append(" \n");
         }
         toReturn.append("\n</p>");
         return toReturn.toString();

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -129,6 +130,20 @@ public class BlackListUtils {
             return true;
         }
         return false;
+    }
+
+    public String getRealURL(String link) {
+        URLConnection conn;
+        try {
+            URL inputURL = new URL(link);
+            conn = inputURL.openConnection();
+            conn.getHeaderFields();
+            return conn.getHeaderField("Location");
+
+        } catch(Exception e) {
+            System.out.println("Error: "+ e.getMessage());
+        }
+        return "Not accesible!";
     }
 
     public boolean isBanned(String domain) {

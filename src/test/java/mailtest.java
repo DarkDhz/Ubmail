@@ -35,7 +35,7 @@ public class mailtest {
         Message message = new MimeMessage(session);
 
 
-        message.setFrom(new InternetAddress("arnau.gris@gmail.com"));
+        message.setFrom(new InternetAddress("blazegammer24@gmail.com"));
 
         InternetAddress[] myToList = InternetAddress.parse("gopi.mani@xyz.com,Maimsa.SF@xyz.com");
         InternetAddress[] myBccList = InternetAddress.parse("Usha.B@xyz.com");
@@ -47,7 +47,7 @@ public class mailtest {
 
         message.setSubject("Mail Subject");
 
-        String msg = "Esto es un correo de prueba \n https://www.ub.edu/cosas \n https://www.ubay.edu/cosas \n https://www.ub.com/cosas \n https://www.universitat.edu/cosas" +
+        String msg = "Esto es un correo de prueba \n https://www.ub.edu/cosas \n https://bit.ly/3PjLsch \n https://www.ub.com/cosas \n https://www.universitat.edu/cosas" +
                 "\n " +
                 "<a href=\"https://www.upc.edu\">Link oculto</a>\n";
 

@@ -24,7 +24,7 @@ public class MailData {
     private String message;
     private final ArrayList<String> urls;
     private final Map<String, Boolean> blacklist;
-    private final Map<String, Boolean> shorten;
+    private final Map<String, String> shorten;
     private final Map<String, String> similar;
     private final Map<String, Boolean> banned;
 
@@ -100,6 +100,8 @@ public class MailData {
         this.password = data[2];
     }
 
+
+
     /**
      * Check all options
      */
@@ -114,8 +116,23 @@ public class MailData {
         DomainYaml domainYaml = DomainYaml.getInstance();
 
 
+        ArrayList<String> copy = new ArrayList<>();
         for (String uri : this.urls) {
-            this.shorten.put(uri, blackListUtils.checkShortener(uri));
+            if (blackListUtils.checkShortener(uri)) {
+                String real_url = blackListUtils.getRealURL(uri);
+
+                if (!uri.equalsIgnoreCase(real_url)) {
+                    this.shorten.put(uri, real_url);
+                    copy.add(real_url);
+                }
+            }
+        }
+
+        this.urls.addAll(copy);
+
+        for (String uri : this.urls) {
+
+            System.out.println(uri);
 
             String domain;
 
@@ -300,7 +317,7 @@ public class MailData {
      * Method to get URLs with shorten service
      * @return Map of URLs
      */
-    public Map<String, Boolean> getShorten() {
+    public Map<String, String> getShorten() {
         return this.shorten;
     }
 
