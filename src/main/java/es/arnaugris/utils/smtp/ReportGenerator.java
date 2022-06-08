@@ -17,6 +17,7 @@ public class ReportGenerator {
     public String generateHTMLReport() {
 
         String toReturn = this.generateHeader() +
+                this.generateHidden() +
                 this.generateBlacklist() +
                 this.generateBanned() +
                 this.generateSimilar() +
@@ -29,6 +30,17 @@ public class ReportGenerator {
     private String generateHeader() {
         return "<h4>REPORT FROM <a style=\"color: green;\"> ANTI PHISHING AG.ES </a>\n</h4>";
 
+    }
+
+    private String generateHidden() {
+        StringBuilder toReturn = new StringBuilder("<p>----------------- HIDDEN -----------------\n");
+
+        for (String uri : data.getHidden()) {
+            toReturn.append("\n</p><p>");
+            toReturn.append(uri).append(" NOT APPEARS AS MAIL TEXT \n");
+        }
+        toReturn.append("\n</p>");
+        return toReturn.toString();
     }
 
     private String generateBlacklist() {

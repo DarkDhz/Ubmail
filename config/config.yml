@@ -1,5 +1,6 @@
 server:
   ip: "localhost"
+  local: "127.0.0.1"
   remote: "54.36.191.29"
   port: 25
   ssl_port: 465

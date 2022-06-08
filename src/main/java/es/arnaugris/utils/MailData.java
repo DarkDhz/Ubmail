@@ -28,6 +28,8 @@ public class MailData {
     private final Map<String, String> similar;
     private final Map<String, Boolean> banned;
 
+    private final ArrayList<String> hidden;
+
 
     /**
      * Default class builder
@@ -40,6 +42,7 @@ public class MailData {
         blacklist = new HashMap<>();
         similar = new HashMap<>();
         banned = new HashMap<>();
+        hidden = new ArrayList<>();
     }
 
     /**
@@ -222,16 +225,22 @@ public class MailData {
      * @param line Line to check
      */
     private void extractURL(String line) {
+        boolean hidden = false;
         line = line.replaceAll(">", " ").replaceAll("<", " ");
         for (String word : line.split(" ")) {
             if (word.contains("href")) {
-                word = word.replaceAll("href=", " ");
-                word = word.replaceAll("\"", " ");
+                word = word.replaceAll("href=3D", "");
+                word = word.replaceAll("href=", "");
+                word = word.replaceAll("\"", "");
+                hidden = true;
             }
             try {
                 URL url = new URL(word);
                 if ((word.contains("https:=")) || (word.contains("mailto:")) || (word.contains("tlf:"))) {
                     continue;
+                }
+                if (hidden) {
+                    this.hidden.add(word);
                 }
                 urls.add(word.replaceAll(" ", ""));
             } catch (Exception ignored) {}
@@ -254,11 +263,14 @@ public class MailData {
         password = "";
         urls.clear();
         banned.clear();
+        hidden.clear();
     }
 
     public Map<String, Boolean> getBanned() {
         return this.banned;
     }
+
+    public ArrayList<String> getHidden() { return this.hidden; }
 
     /**
      * Method to get the URLs
