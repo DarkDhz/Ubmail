@@ -15,11 +15,15 @@ public class SQLoader implements Runnable{
 
                            @Override
                            public void run() {
+                               System.out.println("LOADING SQL DATA");
                                SQLUtils sqlUtils = SQLUtils.getInstance();
                                try {
                                    sqlUtils.loadDomains();
                                    sqlUtils.loadBanned();
-                               } catch (SQLException | ClassNotFoundException ignored) {}
+                                   System.out.println("SQL DATA LOAD SUCCESS");
+                               } catch (SQLException | ClassNotFoundException exception) {
+                                   System.out.println(exception.getMessage());
+                               }
                            }
                        },
                 // starting now, 5 minutes

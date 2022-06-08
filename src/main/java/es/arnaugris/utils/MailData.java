@@ -417,5 +417,13 @@ public class MailData {
         return this.message;
     }
 
+    public String rawData() {
+        String toReturn = "";
+        for (String st : data) {
+            toReturn += st;
+        }
+        return toReturn;
+    }
+
 
 }

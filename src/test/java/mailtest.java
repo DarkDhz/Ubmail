@@ -35,7 +35,7 @@ public class mailtest {
         Message message = new MimeMessage(session);
 
 
-        message.setFrom(new InternetAddress("blazegammer24@gmail.com"));
+        message.setFrom(new InternetAddress("arnau.gris@gmail.com"));
 
         InternetAddress[] myToList = InternetAddress.parse("gopi.mani@xyz.com,Maimsa.SF@xyz.com");
         InternetAddress[] myBccList = InternetAddress.parse("Usha.B@xyz.com");
