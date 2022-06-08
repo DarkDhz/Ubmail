@@ -121,6 +121,10 @@ public class MailData {
             if (blackListUtils.checkShortener(uri)) {
                 String real_url = blackListUtils.getRealURL(uri);
 
+                if (real_url == null) {
+                    continue;
+                }
+
                 if (!uri.equalsIgnoreCase(real_url)) {
                     this.shorten.put(uri, real_url);
                     copy.add(real_url);
@@ -131,8 +135,6 @@ public class MailData {
         this.urls.addAll(copy);
 
         for (String uri : this.urls) {
-
-            System.out.println(uri);
 
             String domain;
 
@@ -256,10 +258,15 @@ public class MailData {
                 if ((word.contains("https:=")) || (word.contains("mailto:")) || (word.contains("tlf:"))) {
                     continue;
                 }
-                if (hidden) {
-                    this.hidden.add(word);
+
+                word = word.replaceAll(" ", "");
+                if (!urls.contains(word)) {
+                    urls.add(word);
+                    if (hidden) {
+                        this.hidden.add(word);
+                    }
                 }
-                urls.add(word.replaceAll(" ", ""));
+
             } catch (Exception ignored) {}
         }
     }

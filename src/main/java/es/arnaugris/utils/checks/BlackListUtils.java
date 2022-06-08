@@ -143,7 +143,7 @@ public class BlackListUtils {
         } catch(Exception e) {
             System.out.println("Error: "+ e.getMessage());
         }
-        return "Not accesible!";
+        return null;
     }
 
     public boolean isBanned(String domain) {
