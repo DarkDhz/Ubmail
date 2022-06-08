@@ -56,7 +56,7 @@ public abstract class ProtocolUtils {
         consoleLogger.printStart();
         send("220 Hola buenas soy el servidor");
 
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             readed = this.read();
 
             if (readed == null) {
