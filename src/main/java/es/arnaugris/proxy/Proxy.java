@@ -20,7 +20,7 @@ public class Proxy extends ServerUtils implements Runnable {
     }
 
     public void run() {
-        while(true) {
+        while(!Thread.currentThread().isInterrupted()) {
             try {
                 Socket socket = server.accept();
 
@@ -29,7 +29,7 @@ public class Proxy extends ServerUtils implements Runnable {
                 Thread t = new Thread(st);
                 t.start();
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                Thread.currentThread().interrupt();
                 break;
             }
         }

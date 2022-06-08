@@ -22,7 +22,7 @@ public class SSLProxy extends ServerUtils implements Runnable{
 
 
     public void run() {
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             try {
                 Socket socket = server.accept();
 
@@ -31,6 +31,7 @@ public class SSLProxy extends ServerUtils implements Runnable{
                 Thread t = new Thread(st);
                 t.start();
             } catch (IOException ex) {
+                Thread.currentThread().interrupt();
                 break;
             }
 
