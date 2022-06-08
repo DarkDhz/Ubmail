@@ -10,6 +10,7 @@ import es.arnaugris.utils.checks.Levenshtein;
 import es.arnaugris.utils.smtp.ReportGenerator;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -125,17 +126,19 @@ public class MailData {
         ArrayList<String> copy = new ArrayList<>();
         for (String uri : this.urls) {
             if (blackListUtils.checkShortener(uri)) {
-                String real_url = blackListUtils.getRealURL(uri);
+                String real_url;
+                try {
+                    real_url = blackListUtils.getRealURLV2(uri);
+                    if (real_url == null) {
+                        continue;
+                    }
 
-                if (real_url == null) {
-                    continue;
-                }
-
-                if (!uri.equalsIgnoreCase(real_url)) {
-                    this.shorten_urls.add(uri);
-                    this.shorten.put(uri, real_url);
-                    copy.add(real_url);
-                }
+                    if (!uri.equalsIgnoreCase(real_url)) {
+                        this.shorten_urls.add(uri);
+                        this.shorten.put(uri, real_url);
+                        copy.add(real_url);
+                    }
+                } catch (IOException ignored) {}
             }
         }
 
@@ -220,7 +223,6 @@ public class MailData {
         boolean reading = false;
         StringBuilder message = new StringBuilder();
 
-        String complete_string = null;
 
         for (String line_string : data) {
 
@@ -231,43 +233,6 @@ public class MailData {
                         reading = false;
                         boundary = null;
                     } else {
-
-                        /*if (complete_string == null && line_string.contains("http")) {
-                            System.out.println("hola");
-                            System.out.println(line_string);
-                            complete_string = line_string;
-                        }
-                        if (complete_string != null && line_string.contains(" ")) {
-                            //System.out.println("hola2");
-
-                            String[] temp = complete_string.split(" ");
-                            complete_string += temp[0];
-
-                            System.out.println("LAST LINE");
-                            System.out.println(line_string);
-
-
-                            extractURL(complete_string);
-
-                            if (temp[temp.length-1].contains("http")) {
-                                complete_string = temp[temp.length-1];
-                            } else {
-                                complete_string = null;
-                            }
-
-                            System.out.println("Completed string");
-                            System.out.println(complete_string);
-                            break;
-
-
-
-                        } else if (complete_string != null) {
-                            System.out.println("hola3");
-                            System.out.println("new line");
-                            System.out.println(line_string);
-                            complete_string += line_string;
-                            System.out.println(complete_string);
-                        }*/
                         extractURLV2(line_string);
                         //extractURL(line_string);
                         message.append(line_string).append("\n");
@@ -289,9 +254,20 @@ public class MailData {
 
 
     private void extractURLV2(String line) {
-        UrlDetector parser = new UrlDetector(line, UrlDetectorOptions.Default);
+        UrlDetector parser = new UrlDetector(line, UrlDetectorOptions.HTML);
         for (Url uri : parser.detect()) {
-            this.urls.add(uri.toString());
+            String word = uri.toString();
+            try {
+                URL url = new URL(word);
+                if ((word.contains("https:=")) || (word.contains("mailto:")) || (word.contains("tlf:")) || (!word.contains("."))) {
+                    continue;
+                }
+                if (!urls.contains(uri.toString())) {
+                    this.urls.add(uri.toString());
+                }
+            } catch (MalformedURLException e) {
+                continue;
+            }
         }
     }
 

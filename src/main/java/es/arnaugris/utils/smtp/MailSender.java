@@ -60,7 +60,7 @@ public class MailSender {
                 Message.RecipientType.TO, InternetAddress.parse(mail.getMailFrom()));
         message.setSubject("MAIL REPORT FROM " + mail.getMailFrom());
 
-        report += "<p> Original Message RAW </p>" + mail.rawData();
+        report += "<p> Original Message RAW </p>" + mail.getMessage();
         MimeBodyPart mimeBodyPart = new MimeBodyPart();
         mimeBodyPart.setContent(report, "text/html; charset=utf-8");
 

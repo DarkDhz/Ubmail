@@ -47,7 +47,7 @@ public class mailtest {
 
         message.setSubject("Mail Subject");
 
-        String msg = "Esto es un correo de prueba \n https://www.ub.edu/cosas \n https://bit.ly/3PjLsch \n https://www.ub.com/cosas \n https://www.universitat.edu/cosas" +
+        String msg = "Esto es un correo de prueba \n https://www.ub.edu/cosas \n https://bit.ly/3mwmHfY \n https://www.ub.com/cosas \n https://www.universitat.edu/cosas" +
                 "\n " +
                 "<a href=\"https://www.upc.edu\">Link oculto</a>\n";
 

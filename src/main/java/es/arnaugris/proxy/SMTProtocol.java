@@ -23,16 +23,11 @@ public class SMTProtocol extends ProtocolUtils {
             }
             this.send("250 smtp.arnaugris.es Hello client");
 
-            //this.send("250-smtp.arnaugris.es Hello client");
-            //this.send("250 AUTH GSSAPI DIGEST-MD5 PLAIN");
             this.Ehlo = true;
         } else if (!this.Ehlo) {
             this.send("503 Invalid secuence of commands");
         } else if (opcode.equalsIgnoreCase("VRFY")) {
             this.send("250 OK");
-        /*} else if (opcode.equalsIgnoreCase("AUTH")) {
-            mail.auth(message);
-            this.send("235 2.7.0 Authentication successful");*/
         } else if (opcode.equalsIgnoreCase("MAIL")) {
             mail.clearAndSetMail_from(message);
             this.send("250 OK");
@@ -45,9 +40,12 @@ public class SMTProtocol extends ProtocolUtils {
         } else if (opcode.equalsIgnoreCase("NOOP")) {
             this.send("250 OK");
         } else if (opcode.equalsIgnoreCase("DATA")) {
+            super.readingData = true;
             this.send("354 OK");
         } else if (opcode.equalsIgnoreCase(".")) {
+            super.readingData = false;
             this.send("250 OK");
+
         } else if (opcode.equalsIgnoreCase("QUIT")) {
             this.send("221 Bye");
             // do the checks
@@ -60,7 +58,10 @@ public class SMTProtocol extends ProtocolUtils {
 
             throw new IOException("close socket");
         } else {
-            mail.addData(message);
+            if (super.readingData) {
+                mail.addData(message);
+            }
+
         }
     }
 

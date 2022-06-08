@@ -3,10 +3,13 @@ package es.arnaugris.utils.checks;
 import es.arnaugris.external.BlacklistYaml;
 import es.arnaugris.external.DomainYaml;
 
+import javax.xml.transform.Result;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -133,7 +136,7 @@ public class BlackListUtils {
     }
 
     public String getRealURL(String link) {
-        //https://onesimpleapi.com/api/unshorten?token=64tNM9WaiGe6EX23cGSI6ZDfqRtqPgJlF866CAcW&url=<url>
+        //
         URLConnection conn;
         try {
             URL inputURL = new URL(link);
@@ -145,6 +148,28 @@ public class BlackListUtils {
             System.out.println("Error: "+ e.getMessage());
         }
         return null;
+    }
+
+    public String getRealURLV2(String shorten) throws IOException {
+        String shortenToken = "64tNM9WaiGe6EX23cGSI6ZDfqRtqPgJlF866CAcW";
+        String destiny = "https://onesimpleapi.com/api/unshorten?token=" + shortenToken + "&url=" + shorten;
+
+        StringBuilder result = new StringBuilder();
+
+        URL url = new URL(destiny);
+
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(conn.getInputStream()))) {
+            for (String line; (line = reader.readLine()) != null; ) {
+                result.append(line);
+            }
+        } catch (Exception e) {
+            return "unreachable";
+        }
+        return result.toString();
     }
 
 }

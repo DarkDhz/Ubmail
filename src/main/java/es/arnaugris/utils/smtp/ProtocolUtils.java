@@ -21,6 +21,7 @@ public abstract class ProtocolUtils {
     protected final MailData mail;
     protected final ConsoleLogger consoleLogger;
     protected boolean Ehlo = false;
+    protected boolean readingData = false;
 
     public ProtocolUtils(BufferedReader reader, BufferedWriter writer) {
         this.in = reader;
