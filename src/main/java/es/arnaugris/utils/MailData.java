@@ -1,8 +1,5 @@
 package es.arnaugris.utils;
 
-import com.linkedin.urls.Url;
-import com.linkedin.urls.detection.UrlDetector;
-import com.linkedin.urls.detection.UrlDetectorOptions;
 import es.arnaugris.external.DomainYaml;
 import es.arnaugris.sql.SQLUtils;
 import es.arnaugris.utils.checks.BlackListUtils;
@@ -10,9 +7,7 @@ import es.arnaugris.utils.checks.Levenshtein;
 import es.arnaugris.utils.smtp.ReportGenerator;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -149,7 +144,7 @@ public class MailData {
             String domain;
 
             try {
-                domain = extractDomain(uri);
+                domain = extractDomainV2(uri);
             } catch (Exception e) {
                 break;
             }
@@ -202,21 +197,35 @@ public class MailData {
      * @param url The URL
      * @return The domain of the URL
      */
-    private String extractDomain(String url) throws Exception {
-        String[] splited = url.split("//");
-        if (splited.length == 0) {
+    /*private String extractDomain(String url) throws Exception {
+        String[] split = url.split("//");
+
+        if (split.length == 0) {
             throw new Exception("Not real domain");
         }
-        String uri = splited[1];
+
+        String uri = split[1];
         uri = uri.split("/")[0];
         System.out.println(uri);
-        if (uri.contains("?")) {
-            System.out.println();
-            uri = url.split("/?")[0];
+
+        String inte = "?";
+        if (uri.contains(inte)) {
+            uri = url.split(inte)[0];
         }
         System.out.println(uri);
         System.out.println("done");
         return uri;
+    }*/
+
+    private String extractDomainV2(String url) throws Exception {
+        String[] split = url.split("//");
+
+        if (split.length == 0) {
+            throw new Exception("Not real domain");
+        }
+
+        URL uri = new URL(url);
+        return uri.getHost();
     }
 
 
@@ -323,24 +332,6 @@ public class MailData {
 
 
 
-    private void extractURLV2(String line) {
-        UrlDetector parser = new UrlDetector(line, UrlDetectorOptions.HTML);
-        for (Url uri : parser.detect()) {
-            String word = uri.toString();
-            try {
-                URL url = new URL(word);
-                if ((word.contains("https:=")) || (word.contains("mailto:")) || (word.contains("tlf:")) || (!word.contains("."))) {
-                    continue;
-                }
-                if (!urls.contains(word)) {
-                    word = word.replaceAll(" ", "").replaceAll("/n", "").replaceAll("/r", "").replaceAll("=20", "");
-                    this.urls.add(word);
-                }
-            } catch (MalformedURLException e) {
-                continue;
-            }
-        }
-    }
 
     /**
      * Method to extract URLs from messages
@@ -455,13 +446,6 @@ public class MailData {
         return mail_from;
     }
 
-    /**
-     * Method to get receivers of the mail
-     * @return ArrayList with all the receivers
-     */
-    public ArrayList<String> getMailTo() {
-        return this.mail_to;
-    }
 
     /**
      * Method to get body message
@@ -471,13 +455,6 @@ public class MailData {
         return this.message;
     }
 
-    public String rawData() {
-        String toReturn = "";
-        for (String st : data) {
-            toReturn += st;
-        }
-        return toReturn;
-    }
 
 
 }
