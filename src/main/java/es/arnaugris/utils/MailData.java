@@ -18,18 +18,14 @@ public class MailData {
     private final ArrayList<String> data;
     private String username;
     private String password;
-
     private String message;
     private final ArrayList<String> urls;
     private final Map<String, Boolean> blacklist;
     private final Map<String, String> shorten;
     private final Map<String, String> similar;
     private final Map<String, Boolean> banned;
-
     private final ArrayList<String> hidden;
-
     private final ArrayList<String> shorten_urls;
-
 
     /**
      * Default class builder
@@ -182,7 +178,7 @@ public class MailData {
             similar.put(domain, most_similar);
 
             for (String bannedURI : sqlUtils.getBanned()) {
-                if (bannedURI.equalsIgnoreCase(domain)) {
+                if (bannedURI.equalsIgnoreCase(domain) || bannedURI.contains(domain)) {
                     this.banned.put(domain, true);
                 }
             }
@@ -351,7 +347,7 @@ public class MailData {
             }
 
             try {
-                URL url = new URL(word);
+                new URL(word);
                 if ((word.contains("https:=")) || (word.contains("mailto:")) || (word.contains("tlf:"))) {
                     continue;
                 }
