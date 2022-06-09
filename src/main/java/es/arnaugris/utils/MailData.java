@@ -209,6 +209,13 @@ public class MailData {
         }
         String uri = splited[1];
         uri = uri.split("/")[0];
+        System.out.println(uri);
+        if (uri.contains("?")) {
+            System.out.println();
+            uri = url.split("/?")[0];
+        }
+        System.out.println(uri);
+        System.out.println("done");
         return uri;
     }
 
@@ -223,7 +230,7 @@ public class MailData {
         boolean reading = false;
         StringBuilder message = new StringBuilder();
 
-
+        StringBuilder completeUrl = null;
         for (String line_string : data) {
 
             if (boundary != null) {
@@ -233,9 +240,72 @@ public class MailData {
                         reading = false;
                         boundary = null;
                     } else {
-                        extractURLV2(line_string);
-                        //extractURL(line_string);
-                        message.append(line_string).append("\n");
+
+                        String check = line_string.replaceAll("/r", "").replaceAll("/n", "").replaceAll(" ", "");
+
+                        String substring = "";
+
+                        if (check.length() > 1) {
+                             substring = check.trim().substring(check.length() - 1);
+                        }
+
+
+
+
+                        if (check.contains("http")  && completeUrl == null && substring.equalsIgnoreCase("=")) {
+
+                            completeUrl = new StringBuilder();
+
+                            String[] split = line_string.split(" ");
+                            String word = split[split.length - 1];
+
+                            word = word.replaceAll("/r", "").replaceAll("/n", "").replaceAll(" ", "").replaceAll("=3D", "=");
+
+                            StringBuilder st = new StringBuilder(word);
+                            st.deleteCharAt(st.length()-1);
+
+                            completeUrl.append(st);
+
+                        } else if (completeUrl != null){
+                            if (line_string.contains(" ") || line_string.contains("<") || line_string.contains("/r") || line_string.contains("/n")) {
+                                String line = line_string.replaceAll(" ", "<");
+
+                                completeUrl.append(line.split("<")[0]);
+                                extractURL(completeUrl.toString());
+
+                                completeUrl = null;
+                            } else {
+                                line_string = line_string.replaceAll("=3D", "=");
+
+                                if (line_string.trim().substring(line_string.length()-1).equalsIgnoreCase("=")) {
+                                    StringBuilder st = new StringBuilder(line_string);
+                                    st.deleteCharAt(st.length()-1);
+                                    completeUrl.append(st);
+                                } else {
+
+                                    completeUrl.append(line_string);
+                                }
+
+                            }
+
+                        }
+
+                        if (line_string.contains(" ") || line_string.contains("<") || line_string.contains("/r") || line_string.contains("/n")) {
+                            if (completeUrl == null) {
+                                extractURL(line_string);
+                            }
+
+                        }
+
+                        if (check.length() > 2 && substring.equalsIgnoreCase("=")) {
+                            StringBuilder st = new StringBuilder(line_string);
+                            st.deleteCharAt(st.length()-1);
+                            line_string = st.toString();
+                        }
+
+                        message.append(line_string);
+
+
                     }
                 } else {
                     if (line_string.contains(boundary)) {
@@ -277,11 +347,10 @@ public class MailData {
      * @param line Line to check
      */
     private void extractURL(String line) {
-        boolean hidden = false;
-        if (line.contains("<") && line.contains(">")) {
-            hidden = true;
-        }
+        boolean hidden = line.contains("<") && line.contains(">");
+
         line = line.replaceAll(">", " ").replaceAll("<", " ");
+
         for (String word : line.split(" ")) {
             if (word.contains("href")) {
                 word = word.replaceAll("href=3D", "");

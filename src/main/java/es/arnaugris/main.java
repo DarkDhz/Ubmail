@@ -59,6 +59,8 @@ public class main {
             // SMTP Server
             servers.add(proxyFactory.createProxy(ProxyType.NORMAL));
             // SMTP SSL Server
+            servers.add(proxyFactory.createProxy(ProxyType.SSL));
+            // SMTP TLS Server
             servers.add(proxyFactory.createProxy(ProxyType.TLS));
             // FILE TIMER LOADER
             servers.add(new SQLoader());

@@ -32,11 +32,7 @@ public class SQLUtils {
 
     private Connection generateConnection() throws ClassNotFoundException, SQLException {
         SQLYaml sqlYaml = SQLYaml.getInstance();
-        Class.forName("com.mysql.jdbc.Driver");
-        String host = "54.36.191.29";
-        String user = "root";
-        String password = "ubending";
-        String database = "ubmail";
+        Class.forName("com.mysql.cj.jdbc.Driver");
 
         return DriverManager.getConnection("jdbc:mysql://" + sqlYaml.getHost() + ":" + sqlYaml.getPort() + "/" + sqlYaml.getDb(),
                 sqlYaml.getUsername(), sqlYaml.getPassword());
