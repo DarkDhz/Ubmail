@@ -1,4 +1,4 @@
-package es.arnaugris.utils.checks;
+package es.arnaugris.checks;
 
 import es.arnaugris.external.BlacklistYaml;
 
@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 

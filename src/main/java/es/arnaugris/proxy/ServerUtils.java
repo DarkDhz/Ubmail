@@ -1,4 +1,4 @@
-package es.arnaugris.utils.server;
+package es.arnaugris.proxy;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

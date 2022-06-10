@@ -1,6 +1,4 @@
-package es.arnaugris.sslproxy;
-
-import es.arnaugris.utils.server.ServerUtils;
+package es.arnaugris.proxy;
 
 import java.io.IOException;
 import java.net.ServerSocket;

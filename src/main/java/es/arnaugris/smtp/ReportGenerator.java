@@ -1,6 +1,4 @@
-package es.arnaugris.utils.smtp;
-
-import es.arnaugris.utils.MailData;
+package es.arnaugris.smtp;
 
 import java.util.Map;
 

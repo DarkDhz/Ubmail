@@ -1,4 +1,6 @@
-package es.arnaugris.sslproxy;
+package es.arnaugris.proxy;
+
+import es.arnaugris.protocol.SSLSMTProtocol;
 
 import java.io.*;
 import java.net.Socket;

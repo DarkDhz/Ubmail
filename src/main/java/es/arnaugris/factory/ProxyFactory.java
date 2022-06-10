@@ -3,7 +3,7 @@ package es.arnaugris.factory;
 
 import es.arnaugris.external.ServerYaml;
 import es.arnaugris.proxy.Proxy;
-import es.arnaugris.sslproxy.SSLProxy;
+import es.arnaugris.proxy.SSLProxy;
 
 import java.io.IOException;
 

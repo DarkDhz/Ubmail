@@ -3,11 +3,8 @@ package es.arnaugris;
 import es.arnaugris.external.*;
 import es.arnaugris.factory.ProxyFactory;
 import es.arnaugris.factory.ProxyType;
-import es.arnaugris.proxy.Proxy;
 import es.arnaugris.sql.SQLoader;
-import es.arnaugris.sslproxy.SSLProxy;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 

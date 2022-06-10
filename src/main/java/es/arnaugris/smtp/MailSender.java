@@ -1,7 +1,6 @@
-package es.arnaugris.utils.smtp;
+package es.arnaugris.smtp;
 
 import es.arnaugris.external.MailYaml;
-import es.arnaugris.utils.MailData;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;

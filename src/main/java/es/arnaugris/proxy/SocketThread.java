@@ -1,5 +1,7 @@
 package es.arnaugris.proxy;
 
+import es.arnaugris.protocol.SMTProtocol;
+
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;

@@ -1,4 +1,4 @@
-package es.arnaugris.utils.smtp;
+package es.arnaugris.smtp;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

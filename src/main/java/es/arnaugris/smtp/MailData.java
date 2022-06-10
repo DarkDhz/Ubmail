@@ -1,10 +1,10 @@
-package es.arnaugris.utils;
+package es.arnaugris.smtp;
 
 import es.arnaugris.external.DomainYaml;
 import es.arnaugris.sql.SQLUtils;
-import es.arnaugris.utils.checks.BlackListUtils;
-import es.arnaugris.utils.checks.Levenshtein;
-import es.arnaugris.utils.smtp.ReportGenerator;
+import es.arnaugris.checks.BlackListUtils;
+import es.arnaugris.checks.Levenshtein;
+import es.arnaugris.smtp.ReportGenerator;
 
 import java.io.IOException;
 import java.net.URL;

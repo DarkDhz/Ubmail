@@ -1,7 +1,5 @@
-package es.arnaugris.proxy;
+package es.arnaugris.protocol;
 
-
-import es.arnaugris.utils.smtp.ProtocolUtils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
