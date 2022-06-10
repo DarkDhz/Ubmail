@@ -47,11 +47,9 @@ public class mailtest {
 
         message.setSubject("Mail Subject");
 
-        String msg = "Esto es cár`sact`èr un correo de prueba \n https://www.ub.edu/cosas \n https://bit.ly/3mwmHfY \n https://www.ub.com/cosas \n https://www.universitat.edu/cosas" +
-                "\n https://www.ionos.es/soluciones-oficina/correo?utm_medium=service_box&utm_source=mail&utm_rid=fe9e54d6-e310-414e-8a31-42f3d946c329" +
-                "<a href=\"https://www.upc.edu\">Link oculto</a>\n";
-        //https://u17063761.ct.sendgrid.net/ls/click?upn=WBLqlOEcPJ4MT-2F1w9AVnTnRtUo0Ef0nx3MYAC-2BPj0wcu8QBYyyzkg1HcWZRO2i58juMGF2wYjpG4Q9gKcpUkOfyo6t1wNYIwRHVkVoLuw4s-3DoiLZ_MQ-2BdZzAEi-2B85suYdHipVjQUhSVM9KUh87N6vp-2FntwVpLzxzCsYBmwxXUb3Zir1Vhv9HO-2F-2B5z-2FfgRT6molGBJ4URymcqEFB9EkmQPbPFqFJ3V-2FRE-2FPdHVjVyLdA3rzoXxlPQIYu3RO7Mny4Us-2F16dWKYvlwWZWg1Zfc5GxMqttDUOB48-2Ba-2Bmlri3oHAQ647IkkXFI9Cf-2FqLSSigIE-2BNdPk3nme2tzUJ-2BrW-2F70129T2Po-3D
-        //https://u17063761.ct.sendgrid.net/ls/click?upn=3DWBLqlOEcPJ4MT-2F1w9AVnTnRtUo0Ef0nx3MYAC-2BPj0wcu8QBYyyzkg1HcWZRO2i58juMGF2wYjpG4Q9gKcpUkOfyo6t1wNYIwRHVkVoLuw4s-3DoiLZ_MQ-2BdZzAEi-2B85suYdHipVjQUhSVM9KUh87N6vp-2FntwVpLzxzCsYBmwxXUb3Zir1Vhv9HO-2F-2B5z-2FfgRT6molGBJ4URymcqEFB9EkmQPbPFqFJ3V-2FRE-2FPdHVjVyLdA3rzoXxlPQIYu3RO7Mny4Us-2F16dWKYvlwWZWg1Zfc5GxMqttDUOB48-2Ba-2Bmlri3oHAQ647IkkXFI9Cf-2FqLSSigIE-2BNdPk3nme2tzUJ-2BrW-2F70129T2Po-3D
+        String msg = "Esto es cár`sact`èr un correo de prueba \n https://www.ub.edu/cosas \n https://www.upc.edu \n https://www.ub.com/cosas \n https://www.universitat.edu/cosas" +
+                "\n https://u17063761.ct.sendgrid.net/ls/click?upn=WBLqlOEcPJ4MT-2F1w9AVnTnRtUo0Ef0nx3MYAC-2BPj0wcu8QBYyyzkg1HcWZRO2i58juMGF2wYjpG4Q9gKcpUkOfyo6t1wNYIwRHVkVoLuw4s-3DoiLZ_MQ-2BdZzAEi-2B85suYdHipVjQUhSVM9KUh87N6vp-2FntwVpLzxzCsYBmwxXUb3Zir1Vhv9HO-2F-2B5z-2FfgRT6molGBJ4URymcqEFB9EkmQPbPFqFJ3V-2FRE-2FPdHVjVyLdA3rzoXxlPQIYu3RO7Mny4Us-2F16dWKYvlwWZWg1Zfc5GxMqttDUOB48-2Ba-2Bmlri3oHAQ647IkkXFI9Cf-2FqLSSigIE-2BNdPk3nme2tzUJ-2BrW-2F70129T2Po-3D" +
+                " https://bit.ly/3mwmHfY " + "<a href=\"https://www.upc.edu\">Link oculto</a>\n";
 
         MimeBodyPart mimeBodyPart = new MimeBodyPart();
         mimeBodyPart.setContent(msg, "text/html; charset=utf-8");

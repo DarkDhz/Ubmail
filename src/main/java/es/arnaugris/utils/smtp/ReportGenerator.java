@@ -15,10 +15,11 @@ public class ReportGenerator {
     public String generateHTMLReport() {
 
         return this.generateHeader() +
-                //this.generateHidden() +
+                this.generateSummary() +
+                this.generateSimilar() +
+                this.generateHidden() +
                 this.generateBlacklist() +
                 this.generateBanned() +
-                this.generateSimilar() +
                 this.generateShorten() +
                 this.generateShortenCorrespondences() +
                 this.generateURLS();
@@ -27,6 +28,27 @@ public class ReportGenerator {
     private String generateHeader() {
         return "<h4>REPORT FROM <a style=\"color: green;\"> ANTI PHISHING AG.ES </a>\n</h4>";
 
+    }
+
+    private String generateSummary() {
+        StringBuilder toReturn = new StringBuilder("<p>----------------- SUMMARY -----------------\n");
+
+        int urls = data.getURLs().size();
+        toReturn.append("\n</p><p>");
+        toReturn.append("NUMBER OF URLS: ").append(urls);
+        toReturn.append("\n</p><p>");
+        toReturn.append("HIDDEN URLS: ").append(data.getHidden().size());
+        toReturn.append("\n</p><p>");
+        toReturn.append("SHORTEN URLS: ").append(data.getShorten_urls().size()).append("/").append(urls);
+        toReturn.append("\n</p><p>");
+        toReturn.append("BLACKLISTED DOMAINS: ").append(data.getBlacklist().size());
+        toReturn.append("\n</p><p>");
+        toReturn.append("BANNED DOMAINS: ").append(data.getBanned().size());
+
+
+
+        toReturn.append("\n</p>");
+        return toReturn.toString();
     }
 
     private String generateHidden() {

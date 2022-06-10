@@ -37,7 +37,6 @@ public class ProxyFactory {
                 return new SSLProxy(server.getIP(), server.getSSlPort());
             case TLS:
                 return new SSLProxy(server.getIP(), server.getTLSPort());
-
             default:
                 return null;
         }

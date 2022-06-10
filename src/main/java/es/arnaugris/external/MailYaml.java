@@ -22,7 +22,7 @@ public class MailYaml implements YamlFile{
         // To ensure only one instance is created
         if (instance == null) {
             synchronized (MailYaml.class) {
-                if (instance == null) {
+            if (instance == null) {
                     instance = new MailYaml();
                 }
             }

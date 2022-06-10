@@ -15,6 +15,7 @@ CREATE TABLE banned (id int unsigned auto_increment,
 
 INSERT INTO domains(domain) VALUES ("ub.edu");
 INSERT INTO domains(domain) VALUES ("www.ub.edu");
+INSERT INTO domains(domain) VALUES ("sso.ub.edu");
 INSERT INTO domains(domain) VALUES ("campusvirtual.ub.edu");
 
 INSERT INTO banned(domain) VALUES ("upc.edu");

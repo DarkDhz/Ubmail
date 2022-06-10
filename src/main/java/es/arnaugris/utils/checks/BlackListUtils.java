@@ -73,6 +73,7 @@ public class BlackListUtils {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            throw new IOException();
         }
 
         return convertBlacklistToMap(result.toString());
@@ -132,17 +133,16 @@ public class BlackListUtils {
 
     public String getRealURL(String link) {
         //
-        URLConnection conn;
+        HttpURLConnection conn;
         try {
             URL inputURL = new URL(link);
-            conn = inputURL.openConnection();
+            conn = (HttpURLConnection) inputURL.openConnection();
             conn.getHeaderFields();
             return conn.getHeaderField("Location");
-
         } catch(Exception e) {
-            System.out.println("Error: "+ e.getMessage());
+            System.out.println(e.getMessage());
+            return null;
         }
-        return null;
     }
 
     public String getRealURLV2(String shorten) throws IOException {
@@ -161,7 +161,7 @@ public class BlackListUtils {
                 result.append(line);
             }
         } catch (Exception e) {
-            return "unreachable";
+            return null;
         }
         return result.toString();
     }

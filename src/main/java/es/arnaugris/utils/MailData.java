@@ -115,35 +115,62 @@ public class MailData {
 
 
         ArrayList<String> copy = new ArrayList<>();
+
         for (String uri : this.urls) {
-            if (blackListUtils.checkShortener(uri)) {
+            if (blackListUtils.checkShortener(uri) || uri.contains("ct.sendgrid.net")) {
+                if (!uri.contains("ct.sendgrid.net")) {
+                    this.shorten_urls.add(uri);
+                }
+
                 String real_url;
                 try {
-                    real_url = blackListUtils.getRealURLV2(uri);
+                    real_url = blackListUtils.getRealURL(uri);
+
                     if (real_url == null) {
-                        continue;
+                        real_url = blackListUtils.getRealURLV2(uri);
+
+
+                        if (real_url == null) {
+                            continue;
+                        }
+
                     }
 
-                    if (!uri.equalsIgnoreCase(real_url)) {
-                        this.shorten_urls.add(uri);
+                    if (!uri.equalsIgnoreCase(real_url) && !real_url.equals("")) {
                         this.shorten.put(uri, real_url);
                         copy.add(real_url);
                     }
+
+
+
                 } catch (IOException ignored) {}
             }
         }
 
-        this.urls.addAll(copy);
+        for (String url: copy) {
+            if(!this.urls.contains(url)) {
+                this.urls.add(url);
+            }
+        }
+
+        ArrayList<String> domains = new ArrayList<>();
 
         for (String uri : this.urls) {
-
             String domain;
-
             try {
                 domain = extractDomainV2(uri);
-            } catch (Exception e) {
-                break;
+                if(!domains.contains(domain)) {
+                    domains.add(domain);
+                }
+            } catch (Exception ignored) {
             }
+
+        }
+
+
+        for (String domain : domains) {
+
+
 
 
             try {
@@ -151,8 +178,8 @@ public class MailData {
                 //Map<String, String> blacklistJSON = blackListUtils.checkDomain(domain);
                 Map<String, String> blacklistJSON = blackListUtils.fakeDomain();
                 blacklist.put(domain, Integer.parseInt(blacklistJSON.get("blacklist_cnt")) > 0);
-            } catch (IOException e) {
-               this.blacklist.put(uri, false);
+            } catch (IOException ignored) {
+
             }
 
 
@@ -178,7 +205,7 @@ public class MailData {
             similar.put(domain, most_similar);
 
             for (String bannedURI : sqlUtils.getBanned()) {
-                if (bannedURI.equalsIgnoreCase(domain) || bannedURI.contains(domain)) {
+                if (bannedURI.equalsIgnoreCase(domain) || domain.contains(bannedURI)) {
                     this.banned.put(domain, true);
                 }
             }
@@ -221,7 +248,19 @@ public class MailData {
         }
 
         URL uri = new URL(url);
-        return uri.getHost();
+
+        String check = uri.getHost();
+        String substring;
+
+        if (check.length() > 1) {
+            substring = check.trim().substring(check.length() - 1);
+            if (!substring.equalsIgnoreCase("=")) {
+                return check;
+            }
+        }
+        throw new IOException("not domain found");
+
+
     }
 
 
@@ -336,7 +375,7 @@ public class MailData {
     private void extractURL(String line) {
         boolean hidden = line.contains("<") && line.contains(">");
 
-        line = line.replaceAll(">", " ").replaceAll("<", " ");
+        line = line.replaceAll(">", " ").replaceAll("<", " ").replaceAll("=20", "");
 
         for (String word : line.split(" ")) {
             if (word.contains("href")) {
@@ -356,7 +395,7 @@ public class MailData {
 
                 if (!urls.contains(word)) {
                     urls.add(word);
-                    if (hidden) {
+                    if (hidden && !word.contains("ct.sendgrid.net")) {
                         this.hidden.add(word);
                     }
                 }
