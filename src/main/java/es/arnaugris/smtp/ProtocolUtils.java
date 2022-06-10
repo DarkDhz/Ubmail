@@ -1,9 +1,5 @@
 package es.arnaugris.smtp;
 
-import es.arnaugris.smtp.MailData;
-import es.arnaugris.smtp.ConsoleLogger;
-import es.arnaugris.smtp.MailSender;
-
 import javax.mail.MessagingException;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;

@@ -4,7 +4,6 @@ import es.arnaugris.external.DomainYaml;
 import es.arnaugris.sql.SQLUtils;
 import es.arnaugris.checks.BlackListUtils;
 import es.arnaugris.checks.Levenshtein;
-import es.arnaugris.smtp.ReportGenerator;
 
 import java.io.IOException;
 import java.net.URL;
@@ -220,7 +219,7 @@ public class MailData {
      * @param url The URL
      * @return The domain of the URL
      */
-    /*private String extractDomain(String url) throws Exception {
+    private String extractDomain(String url) throws Exception {
         String[] split = url.split("//");
 
         if (split.length == 0) {
@@ -238,7 +237,7 @@ public class MailData {
         System.out.println(uri);
         System.out.println("done");
         return uri;
-    }*/
+    }
 
     private String extractDomainV2(String url) throws Exception {
         String[] split = url.split("//");

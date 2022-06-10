@@ -1,8 +1,5 @@
 package es.arnaugris.smtp;
 
-
-import es.arnaugris.smtp.ProtocolUtils;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
