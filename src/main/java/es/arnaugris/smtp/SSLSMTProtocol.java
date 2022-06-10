@@ -1,6 +1,6 @@
-package es.arnaugris.protocol;
+package es.arnaugris.smtp;
 
-import es.arnaugris.protocol.ProtocolUtils;
+import es.arnaugris.smtp.ProtocolUtils;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSocket;

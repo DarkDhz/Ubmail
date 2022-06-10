@@ -1,6 +1,6 @@
 package es.arnaugris.proxy;
 
-import es.arnaugris.protocol.SMTProtocol;
+import es.arnaugris.smtp.SMTProtocol;
 
 import java.io.*;
 import java.net.Socket;

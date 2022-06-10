@@ -1,4 +1,4 @@
-package es.arnaugris.protocol;
+package es.arnaugris.smtp;
 
 import es.arnaugris.smtp.MailData;
 import es.arnaugris.smtp.ConsoleLogger;
