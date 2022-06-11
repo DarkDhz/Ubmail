@@ -258,8 +258,6 @@ public class MailData {
             }
         }
         throw new IOException("not domain found");
-
-
     }
 
 
@@ -268,16 +266,13 @@ public class MailData {
      * @return The mail message
      */
     public String extractMessage() {
-        String boundary = null;
-        String end_boundary = null;
+        String end_boundary = null, boundary = null;
         boolean reading = false;
         StringBuilder message = new StringBuilder();
-
         StringBuilder completeUrl = null;
+
         for (String line_string : data) {
-
             if (boundary != null) {
-
                 if (reading) {
                     if (line_string.contains(end_boundary)) {
                         reading = false;
@@ -285,15 +280,11 @@ public class MailData {
                     } else {
 
                         String check = line_string.replaceAll("/r", "").replaceAll("/n", "").replaceAll(" ", "");
-
                         String substring = "";
 
                         if (check.length() > 1) {
                              substring = check.trim().substring(check.length() - 1);
                         }
-
-
-
 
                         if (check.contains("http")  && completeUrl == null && substring.equalsIgnoreCase("=")) {
 
@@ -328,16 +319,13 @@ public class MailData {
 
                                     completeUrl.append(line_string);
                                 }
-
                             }
-
                         }
 
                         if (line_string.contains(" ") || line_string.contains("<") || line_string.contains("/r") || line_string.contains("/n")) {
                             if (completeUrl == null) {
                                 extractURL(line_string);
                             }
-
                         }
 
                         if (check.length() > 2 && substring.equalsIgnoreCase("=")) {
@@ -347,7 +335,6 @@ public class MailData {
                         }
 
                         message.append(line_string);
-
 
                     }
                 } else {
@@ -359,7 +346,6 @@ public class MailData {
                 boundary = line_string.split("boundary=")[1].replaceAll("\"", "");
                 end_boundary = boundary + "--";
             }
-
         }
         return message.toString();
     }

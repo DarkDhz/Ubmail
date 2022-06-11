@@ -13,7 +13,7 @@ shorten:
   api_key: "64tNM9WaiGe6EX23cGSI6ZDfqRtqPgJlF866CAcW"
 ssl:
   local: "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\ubmail.jks"
-  remote: "/home/debian/java/crtf/ubmail.jk"
+  remote: "/home/debian/java/crtf/ubmail.jks"
   certificate_path: "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\ubmail.jks"
   pass: "ubmail"
 mail:
