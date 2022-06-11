@@ -3,7 +3,6 @@ package es.arnaugris.factory;
 
 import es.arnaugris.external.ServerYaml;
 import es.arnaugris.proxy.Proxy;
-import es.arnaugris.proxy.SSLProxy;
 
 import java.io.IOException;
 
@@ -32,11 +31,11 @@ public class ProxyFactory {
         ServerYaml server = ServerYaml.getInstance();
         switch (type)  {
             case NORMAL:
-                return new Proxy(server.getIP(), server.getPort());
+                return new Proxy(server.getIP(), server.getPort(), type);
             case SSL:
-                return new SSLProxy(server.getIP(), server.getSSlPort());
+                return new Proxy(server.getIP(), server.getSSlPort(), type);
             case TLS:
-                return new SSLProxy(server.getIP(), server.getTLSPort());
+                return new Proxy(server.getIP(), server.getTLSPort(), type);
             default:
                 return null;
         }
