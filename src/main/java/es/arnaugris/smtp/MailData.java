@@ -18,13 +18,8 @@ public class MailData {
     private String username;
     private String password;
     private String message;
-    private final ArrayList<String> urls;
-    private final Map<String, Boolean> blacklist;
-    private final Map<String, String> shorten;
-    private final Map<String, String> similar;
-    private final Map<String, Boolean> banned;
-    private final ArrayList<String> hidden;
-    private final ArrayList<String> shorten_urls;
+    private final SMTPExtractor smtpExtractor;
+    private final SMTPChecker smtpChecker;
 
     /**
      * Default class builder
@@ -32,13 +27,8 @@ public class MailData {
     public MailData() {
         mail_to = new ArrayList<>();
         data = new ArrayList<>();
-        urls = new ArrayList<>();
-        shorten = new HashMap<>();
-        blacklist = new HashMap<>();
-        similar = new HashMap<>();
-        banned = new HashMap<>();
-        hidden = new ArrayList<>();
-        shorten_urls = new ArrayList<>();
+        smtpExtractor = new SMTPExtractor();
+        smtpChecker = new SMTPChecker();
     }
 
     /**
@@ -96,302 +86,11 @@ public class MailData {
         this.password = data[2];
     }
 
-
-
-    /**
-     * Check all options
-     */
-    public void checkAll() {
-        this.similar.clear();
-        this.shorten.clear();
-        this.blacklist.clear();
-        this.banned.clear();
-
-        BlackListUtils blackListUtils = BlackListUtils.getInstance();
-        Levenshtein lev = Levenshtein.getInstance();
-        DomainYaml domainYaml = DomainYaml.getInstance();
-        SQLUtils sqlUtils = SQLUtils.getInstance();
-
-
-        ArrayList<String> copy = new ArrayList<>();
-
-        for (String uri : this.urls) {
-            if (blackListUtils.checkShortener(uri) || uri.contains("ct.sendgrid.net")) {
-                if (!uri.contains("ct.sendgrid.net")) {
-                    this.shorten_urls.add(uri);
-                }
-
-                String real_url;
-                try {
-                    real_url = blackListUtils.getRealURL(uri);
-
-                    if (real_url == null) {
-                        real_url = blackListUtils.getRealURLV2(uri);
-
-
-                        if (real_url == null) {
-                            continue;
-                        }
-
-                    }
-
-                    if (!uri.equalsIgnoreCase(real_url) && !real_url.equals("")) {
-                        this.shorten.put(uri, real_url);
-                        copy.add(real_url);
-                    }
-
-
-
-                } catch (IOException ignored) {}
-            }
-        }
-
-        for (String url: copy) {
-            if(!this.urls.contains(url)) {
-                this.urls.add(url);
-            }
-        }
-
-        ArrayList<String> domains = new ArrayList<>();
-
-        for (String uri : this.urls) {
-            String domain;
-            try {
-                domain = extractDomainV2(uri);
-                if(!domains.contains(domain)) {
-                    domains.add(domain);
-                }
-            } catch (Exception ignored) {
-            }
-
-        }
-
-
-        for (String domain : domains) {
-
-
-
-
-            try {
-                //TODO CHANGE FOR DELIVERY
-                //Map<String, String> blacklistJSON = blackListUtils.checkDomain(domain);
-                Map<String, String> blacklistJSON = blackListUtils.fakeDomain();
-                blacklist.put(domain, Integer.parseInt(blacklistJSON.get("blacklist_cnt")) > 0);
-            } catch (IOException ignored) {
-
-            }
-
-
-
-            int min_distance = Integer.MAX_VALUE;
-            String most_similar = "None";
-
-            for (String check : sqlUtils.getList()) {
-
-
-                int distance = lev.levenshtein(check, domain);
-
-                if (distance == 0) {
-                    most_similar = "Legitimate link";
-                    break;
-                }
-
-                if ((distance < min_distance) && (distance < domainYaml.getSensitive())) {
-                    most_similar = check;
-                }
-            }
-
-            similar.put(domain, most_similar);
-
-            for (String bannedURI : sqlUtils.getBanned()) {
-                if (bannedURI.equalsIgnoreCase(domain) || domain.contains(bannedURI)) {
-                    this.banned.put(domain, true);
-                }
-            }
-
-        }
-
-    }
-
-
-    /**
-     * Method to extract domain from a URL
-     * @param url The URL
-     * @return The domain of the URL
-     */
-    private String extractDomain(String url) throws Exception {
-        String[] split = url.split("//");
-
-        if (split.length == 0) {
-            throw new Exception("Not real domain");
-        }
-
-        String uri = split[1];
-        uri = uri.split("/")[0];
-        System.out.println(uri);
-
-        String inte = "?";
-        if (uri.contains(inte)) {
-            uri = url.split(inte)[0];
-        }
-        System.out.println(uri);
-        System.out.println("done");
-        return uri;
-    }
-
-    private String extractDomainV2(String url) throws Exception {
-        String[] split = url.split("//");
-
-        if (split.length == 0) {
-            throw new Exception("Not real domain");
-        }
-
-        URL uri = new URL(url);
-
-        String check = uri.getHost();
-        String substring;
-
-        if (check.length() > 1) {
-            substring = check.trim().substring(check.length() - 1);
-            if (!substring.equalsIgnoreCase("=")) {
-                return check;
-            }
-        }
-        throw new IOException("not domain found");
-    }
-
-
-    /**
-     * Method to get the boundary and then extract the mail message
-     * @return The mail message
-     */
-    public String extractMessage() {
-        String end_boundary = null, boundary = null;
-        boolean reading = false;
-        StringBuilder message = new StringBuilder();
-        StringBuilder completeUrl = null;
-
-        for (String line_string : data) {
-            if (boundary != null) {
-                if (reading) {
-                    if (line_string.contains(end_boundary)) {
-                        reading = false;
-                        boundary = null;
-                    } else {
-
-                        String check = line_string.replaceAll("/r", "").replaceAll("/n", "").replaceAll(" ", "");
-                        String substring = "";
-
-                        if (check.length() > 1) {
-                             substring = check.trim().substring(check.length() - 1);
-                        }
-
-                        if (check.contains("http")  && completeUrl == null && substring.equalsIgnoreCase("=")) {
-
-                            completeUrl = new StringBuilder();
-
-                            String[] split = line_string.split(" ");
-                            String word = split[split.length - 1];
-
-                            word = word.replaceAll("/r", "").replaceAll("/n", "").replaceAll(" ", "").replaceAll("=3D", "=");
-
-                            StringBuilder st = new StringBuilder(word);
-                            st.deleteCharAt(st.length()-1);
-
-                            completeUrl.append(st);
-
-                        } else if (completeUrl != null){
-                            if (line_string.contains(" ") || line_string.contains("<") || line_string.contains("/r") || line_string.contains("/n")) {
-                                String line = line_string.replaceAll(" ", "<");
-
-                                completeUrl.append(line.split("<")[0]);
-                                extractURL(completeUrl.toString());
-
-                                completeUrl = null;
-                            } else {
-                                line_string = line_string.replaceAll("=3D", "=");
-
-                                if (line_string.trim().substring(line_string.length()-1).equalsIgnoreCase("=")) {
-                                    StringBuilder st = new StringBuilder(line_string);
-                                    st.deleteCharAt(st.length()-1);
-                                    completeUrl.append(st);
-                                } else {
-
-                                    completeUrl.append(line_string);
-                                }
-                            }
-                        }
-
-                        if (line_string.contains(" ") || line_string.contains("<") || line_string.contains("/r") || line_string.contains("/n")) {
-                            if (completeUrl == null) {
-                                extractURL(line_string);
-                            }
-                        }
-
-                        if (check.length() > 2 && substring.equalsIgnoreCase("=")) {
-                            StringBuilder st = new StringBuilder(line_string);
-                            st.deleteCharAt(st.length()-1);
-                            line_string = st.toString();
-                        }
-
-                        message.append(line_string);
-
-                    }
-                } else {
-                    if (line_string.contains(boundary)) {
-                        reading = true;
-                    }
-                }
-            } else if (line_string.contains("boundary")) {
-                boundary = line_string.split("boundary=")[1].replaceAll("\"", "");
-                end_boundary = boundary + "--";
-            }
-        }
-        return message.toString();
-    }
-
-
-
-
-    /**
-     * Method to extract URLs from messages
-     * @param line Line to check
-     */
-    private void extractURL(String line) {
-        boolean hidden = line.contains("<") && line.contains(">");
-
-        line = line.replaceAll(">", " ").replaceAll("<", " ").replaceAll("=20", "");
-
-        for (String word : line.split(" ")) {
-            if (word.contains("href")) {
-                word = word.replaceAll("href=3D", "");
-                word = word.replaceAll("href=", "");
-                word = word.replaceAll("\"", "");
-                hidden = true;
-            }
-
-            try {
-                new URL(word);
-                if ((word.contains("https:=")) || (word.contains("mailto:")) || (word.contains("tlf:"))) {
-                    continue;
-                }
-
-                word = word.replaceAll(" ", "");
-
-                if (!urls.contains(word)) {
-                    urls.add(word);
-                    if (hidden && !word.contains("ct.sendgrid.net")) {
-                        this.hidden.add(word);
-                    }
-                }
-
-            } catch (Exception ignored) {}
-        }
-    }
-
     public String getReport() {
-        this.message = this.extractMessage();
-        this.checkAll();
+        this.message = smtpExtractor.extractMessage(this.data);
+        ArrayList<String> result = smtpChecker.discoverURLS(getURLs());
+        smtpExtractor.addURLs(result);
+        smtpChecker.checkAll(getURLs());
 
         ReportGenerator reportGenerator = new ReportGenerator(this);
         return reportGenerator.generateHTMLReport();
@@ -403,19 +102,18 @@ public class MailData {
         data.clear();
         username = "";
         password = "";
-        urls.clear();
-        banned.clear();
-        hidden.clear();
+        smtpExtractor.clear();
+        smtpChecker.clear();
     }
 
     public Map<String, Boolean> getBanned() {
-        return this.banned;
+        return smtpChecker.getBanned();
     }
 
-    public ArrayList<String> getHidden() { return this.hidden; }
+    public ArrayList<String> getHidden() { return smtpExtractor.getHidden(); }
 
     public ArrayList<String> getShorten_urls() {
-        return shorten_urls;
+        return smtpChecker.getShorten_urls();
     }
 
     /**
@@ -423,7 +121,7 @@ public class MailData {
      * @return ArrayList of URLs
      */
     public ArrayList<String> getURLs() {
-        return this.urls;
+        return smtpExtractor.getUrls();
     }
 
     /**
@@ -431,7 +129,7 @@ public class MailData {
      * @return Map of similarities
      */
     public Map<String, String> getSimilarityDomains() {
-        return this.similar;
+        return smtpChecker.getSimilar();
     }
 
     /**
@@ -439,7 +137,7 @@ public class MailData {
      * @return Map of URLs
      */
     public Map<String, Boolean> getBlacklist() {
-        return this.blacklist;
+        return smtpChecker.getBlacklist();
     }
 
     /**
@@ -447,7 +145,7 @@ public class MailData {
      * @return Map of URLs
      */
     public Map<String, String> getShorten() {
-        return this.shorten;
+        return smtpChecker.getShorten();
     }
 
     /**
