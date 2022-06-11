@@ -106,7 +106,7 @@ public class SMTPChecker {
 
     }
 
-    public void checkBanned(String domain) {
+    private void checkBanned(String domain) {
         SQLUtils sqlUtils = SQLUtils.getInstance();
 
         for (String bannedURI : sqlUtils.getBanned()) {
