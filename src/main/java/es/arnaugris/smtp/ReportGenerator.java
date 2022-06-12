@@ -10,6 +10,10 @@ public class ReportGenerator {
         this.data = d;
     }
 
+    /**
+     * Method to generate the full report
+     * @return Full report
+     */
     public String generateHTMLReport() {
 
         return this.generateHeader() +
@@ -23,11 +27,19 @@ public class ReportGenerator {
                 this.generateURLS();
     }
 
+    /**
+     * Method to generate report header
+     * @return The report header
+     */
     private String generateHeader() {
         return "<h4>REPORT FROM <a style=\"color: green;\"> ANTI PHISHING AG.ES </a>\n</h4>";
 
     }
 
+    /**
+     * Method to generate report summary
+     * @return The report summary
+     */
     private String generateSummary() {
         StringBuilder toReturn = new StringBuilder("<p>----------------- SUMMARY -----------------\n");
 
@@ -42,13 +54,14 @@ public class ReportGenerator {
         toReturn.append("BLACKLISTED DOMAINS: ").append(data.getBlacklist().size());
         toReturn.append("\n</p><p>");
         toReturn.append("BANNED DOMAINS: ").append(data.getBanned().size());
-
-
-
         toReturn.append("\n</p>");
         return toReturn.toString();
     }
 
+    /**
+     * Method to generate hidden report section
+     * @return Hidden report
+     */
     private String generateHidden() {
         StringBuilder toReturn = new StringBuilder("<p>----------------- HIDDEN -----------------\n");
 
@@ -60,6 +73,10 @@ public class ReportGenerator {
         return toReturn.toString();
     }
 
+    /**
+     * Method to generate blacklist report section
+     * @return Blacklist report
+     */
     private String generateBlacklist() {
         StringBuilder toReturn = new StringBuilder("<p>----------------- BLACKLIST -----------------\n");
 
@@ -75,6 +92,10 @@ public class ReportGenerator {
         return toReturn.toString();
     }
 
+    /**
+     * Method to generate Banned report section
+     * @return Banned report
+     */
     private String generateBanned() {
         StringBuilder toReturn = new StringBuilder("<p>----------------- BANNED -----------------\n");
 
@@ -90,6 +111,10 @@ public class ReportGenerator {
         return toReturn.toString();
     }
 
+    /**
+     * Method to generate Similar report section
+     * @return Similar report
+     */
     private String generateSimilar() {
         StringBuilder toReturn = new StringBuilder("<p>----------------- SIMILAR -----------------\n");
 
@@ -111,6 +136,10 @@ public class ReportGenerator {
         return toReturn.toString();
     }
 
+    /**
+     * Method to generate Correspondences report section
+     * @return Correspondences report
+     */
     private String generateShortenCorrespondences() {
         StringBuilder toReturn = new StringBuilder("<p>----------------- REAL URLS -----------------");
 
@@ -125,6 +154,10 @@ public class ReportGenerator {
 
     }
 
+    /**
+     * Method to generate Shorten report section
+     * @return Shorten report
+     */
     private String generateShorten() {
         StringBuilder toReturn = new StringBuilder("<p>----------------- SHORTEN -----------------");
 
@@ -137,6 +170,10 @@ public class ReportGenerator {
 
     }
 
+    /**
+     * Method to generate URL report section
+     * @return URL report
+     */
     private String generateURLS() {
         StringBuilder toReturn = new StringBuilder("<p>----------------- URLS -----------------\n");
         for (String uri : data.getURLs()) {

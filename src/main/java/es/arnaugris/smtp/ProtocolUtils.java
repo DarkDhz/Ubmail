@@ -13,7 +13,6 @@ public abstract class ProtocolUtils {
 
     protected BufferedReader in;
     protected BufferedWriter out;
-
     protected final MailData mail;
     protected final ConsoleLogger consoleLogger;
     protected boolean Ehlo = false;
@@ -26,6 +25,12 @@ public abstract class ProtocolUtils {
         this.mail = new MailData();
     }
 
+    /**
+     * Method to convert regular socket to SSL
+     * @param socket The original socket
+     * @return The SSL socket
+     * @throws IOException Error converting the socket
+     */
     protected SSLSocket createSSLSocket(Socket socket) throws IOException {
         SSLSocketFactory sf = ((SSLSocketFactory) SSLSocketFactory.getDefault());
         InetSocketAddress remoteAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
@@ -40,6 +45,11 @@ public abstract class ProtocolUtils {
         return s;
     }
 
+    /**
+     * Method to split line sentence
+     * @param message The message to split
+     * @return Split message
+     */
     protected String split_message(String message) { return message.split(" ")[0]; }
 
     protected void performPostMail() throws MessagingException {
@@ -48,6 +58,10 @@ public abstract class ProtocolUtils {
 
     }
 
+    /**
+     * Method to handle SMTP in data
+     * @throws IOException Cannot read data
+     */
     public void handle() throws IOException {
         String readed;
         consoleLogger.printStart();
@@ -65,13 +79,28 @@ public abstract class ProtocolUtils {
 
     }
 
+    /**
+     * Method to response the command
+     * @param message Command to response
+     * @throws IOException Cannot response the message
+     */
     protected abstract void response(String message) throws IOException;
 
+    /**
+     * Method to send data through the buffer
+     * @param message Message to send
+     * @throws IOException Cannot send data
+     */
     protected void send(String message) throws IOException {
         out.write(message + "\n");
         out.flush();
     }
 
+    /**
+     * Method to read data from the buffer
+     * @return Readed data
+     * @throws IOException Cannot read data
+     */
     private String read() throws IOException {
         return in.readLine();
     }

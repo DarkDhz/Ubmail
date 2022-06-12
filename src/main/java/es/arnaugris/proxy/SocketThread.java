@@ -22,6 +22,9 @@ public class SocketThread implements Runnable {
 
     }
 
+    /**
+     * Run the SMTP thread
+     */
     public void run() {
         try {
             switch (this.proxyType) {

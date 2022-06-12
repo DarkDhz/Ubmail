@@ -28,6 +28,10 @@ public class DomainYaml implements YamlFile{
         return instance;
     }
 
+    /**
+     * Method to load data from file
+     * @throws IOException file not found
+     */
     public void load() throws IOException {
 
         InputStream inputStream = Files.newInputStream(Paths.get("config/config.yml"));
@@ -40,6 +44,10 @@ public class DomainYaml implements YamlFile{
 
     }
 
+    /**
+     * Method to get the algorithm sensitive
+     * @return Sensitive value
+     */
     public int getSensitive() {
         return this.sensitive;
     }

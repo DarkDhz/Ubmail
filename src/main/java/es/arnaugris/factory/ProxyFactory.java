@@ -27,6 +27,12 @@ public class ProxyFactory {
         return instance;
     }
 
+    /**
+     * Method to generate the server
+     * @param type Server type
+     * @return Server instance
+     * @throws IOException Cannot open the server
+     */
     public Runnable createProxy(ProxyType type) throws IOException {
         ServerYaml server = ServerYaml.getInstance();
         switch (type)  {

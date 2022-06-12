@@ -21,9 +21,6 @@ public class MailData {
     private final SMTPExtractor smtpExtractor;
     private final SMTPChecker smtpChecker;
 
-    /**
-     * Default class builder
-     */
     public MailData() {
         mail_to = new ArrayList<>();
         data = new ArrayList<>();
@@ -86,6 +83,10 @@ public class MailData {
         this.password = data[2];
     }
 
+    /**
+     * Method to process the data report
+     * @return HTML Report
+     */
     public String getReport() {
         this.message = smtpExtractor.extractMessage(this.data);
         ArrayList<String> result = smtpChecker.discoverURLS(getURLs());
@@ -96,6 +97,9 @@ public class MailData {
         return reportGenerator.generateHTMLReport();
     }
 
+    /**
+     * Method to reset data
+     */
     public void clear() {
         mail_from = "";
         mail_to.clear();
@@ -106,10 +110,18 @@ public class MailData {
         smtpChecker.clear();
     }
 
+    /**
+     * Method to get banned result
+     * @return Result Map
+     */
     public Map<String, Boolean> getBanned() {
         return smtpChecker.getBanned();
     }
 
+    /**
+     * Method to get Hidden URL
+     * @return Hidden URL
+     */
     public ArrayList<String> getHidden() { return smtpExtractor.getHidden(); }
 
     public ArrayList<String> getShorten_urls() {

@@ -14,8 +14,11 @@ public class SMTPExtractor {
         hidden = new ArrayList<>();
     }
 
-
-
+    /**
+     * Method to extract message from SMTP data
+     * @param data SMTP data
+     * @return Extracted message
+     */
     public String extractMessage(ArrayList<String> data) {
         String end_boundary = null, boundary = null;
         boolean reading = false;
@@ -137,10 +140,18 @@ public class SMTPExtractor {
         }
     }
 
+    /**
+     * Method to get message URL
+     * @return Message URL
+     */
     public ArrayList<String> getUrls() {
         return urls;
     }
 
+    /**
+     * Method to get Hidden URL
+     * @return Hidden URL
+     */
     public ArrayList<String> getHidden() {
         return hidden;
     }
@@ -153,6 +164,9 @@ public class SMTPExtractor {
         }
     }
 
+    /**
+     * Method to clear data
+     */
     public void clear() {
         this.urls.clear();
         this.hidden.clear();

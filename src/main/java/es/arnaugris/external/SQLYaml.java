@@ -33,27 +33,50 @@ public class SQLYaml implements YamlFile{
         return instance;
     }
 
+    /**
+     * Method to get the DB name
+     * @return DB name
+     */
     public String getDb() {
         return db;
     }
 
+    /**
+     * Method to get the MySQL server IP
+     * @return Server IPv4
+     */
     public String getHost() {
         return host;
     }
 
+    /**
+     * Method to get MySQL server port
+     * @return The port
+     */
     public int getPort() {
         return port;
     }
 
+    /**
+     * Method to get MySQL username
+     * @return The username
+     */
     public String getUsername() {
         return this.username;
     }
 
+    /**
+     * Method to get MySQL password
+     * @return The password
+     */
     public String getPassword() {
         return password;
     }
 
-
+    /**
+     * Method to load data from file
+     * @throws IOException file not found
+     */
     public void load() throws IOException {
 
         InputStream inputStream = Files.newInputStream(Paths.get("config/config.yml"));

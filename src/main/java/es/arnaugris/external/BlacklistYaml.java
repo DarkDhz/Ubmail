@@ -31,14 +31,26 @@ public class BlacklistYaml implements YamlFile {
         return instance;
     }
 
+    /**
+     * Method to get the blacklist API key
+     * @return The key
+     */
     public String getKey() {
         return this.api_key;
     }
 
+    /**
+     * Method to get the shorten API key
+     * @return The key
+     */
     public String getShortenKey() {
         return this.shorten_key;
     }
 
+    /**
+     * Method to load data from file
+     * @throws IOException file not found
+     */
     public void load() throws IOException {
 
         InputStream inputStream = Files.newInputStream(Paths.get("config/config.yml"));

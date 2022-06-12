@@ -28,6 +28,11 @@ public class SMTPChecker {
 
     }
 
+    /**
+     * Method to discover redirections
+     * @param urls URL to discover
+     * @return Discovered URL
+     */
     public ArrayList<String> discoverURLS(ArrayList<String> urls) {
 
         BlackListUtils blackListUtils = BlackListUtils.getInstance();
@@ -67,18 +72,26 @@ public class SMTPChecker {
 
     }
 
+    /**
+     * Method to check if domain is blacklisted
+     * @param domain Domain to check
+     */
     private void checkBlacklist(String domain) {
         BlackListUtils blackListUtils = BlackListUtils.getInstance();
         try {
             //TODO CHANGE FOR DELIVERY
-            //Map<String, String> blacklistJSON = blackListUtils.checkDomain(domain);
-            Map<String, String> blacklistJSON = blackListUtils.fakeDomain();
+            Map<String, String> blacklistJSON = blackListUtils.checkDomain(domain);
+            //Map<String, String> blacklistJSON = blackListUtils.fakeDomain();
             blacklist.put(domain, Integer.parseInt(blacklistJSON.get("blacklist_cnt")) > 0);
         } catch (IOException ignored) {
 
         }
     }
 
+    /**
+     * Method to check similar domains
+     * @param domain Domain to check
+     */
     private void checkSimilar(String domain) {
         Levenshtein lev = Levenshtein.getInstance();
         DomainYaml domainYaml = DomainYaml.getInstance();
@@ -106,6 +119,10 @@ public class SMTPChecker {
 
     }
 
+    /**
+     * Method to check if domain is banned
+     * @param domain Domain to check
+     */
     private void checkBanned(String domain) {
         SQLUtils sqlUtils = SQLUtils.getInstance();
 
@@ -117,7 +134,8 @@ public class SMTPChecker {
     }
 
     /**
-     * Check all options
+     * Method to check all modules
+     * @param urls URL to check
      */
     public void checkAll(ArrayList<String> urls) {
         ArrayList<String> domains = new ArrayList<>();
@@ -143,7 +161,7 @@ public class SMTPChecker {
     }
 
     /**
-     * Method to extract domain from a URL
+     * Auxiliary method to extract domain from a URL
      * @param url The URL
      * @return The domain of the URL
      */
@@ -167,6 +185,12 @@ public class SMTPChecker {
         return uri;
     }
 
+    /**
+     * Method to extract domain from URL
+     * @param url URL to extract
+     * @return URL domain
+     * @throws Exception Cannot extract the domain
+     */
     public String extractDomainV2(String url) throws Exception {
         String[] split = url.split("//");
 
@@ -188,6 +212,9 @@ public class SMTPChecker {
         throw new IOException("not domain found");
     }
 
+    /**
+     * Method to clear all data
+     */
     public void clear() {
         this.banned.clear();
         this.shorten.clear();
@@ -196,22 +223,42 @@ public class SMTPChecker {
         this.similar.clear();
     }
 
+    /**
+     * Method to get URL correspondences
+     * @return URL correspondences
+     */
     public ArrayList<String> getShorten_urls() {
         return shorten_urls;
     }
 
+    /**
+     * Method to get Banned domains
+     * @return Banned domains
+     */
     public Map<String, Boolean> getBanned() {
         return banned;
     }
 
+    /**
+     * Method to get Blacklisted domains
+     * @return Blacklisted domains
+     */
     public Map<String, Boolean> getBlacklist() {
         return blacklist;
     }
 
+    /**
+     * Method to get URL with shorten service
+     * @return Shorten URL
+     */
     public Map<String, String> getShorten() {
         return shorten;
     }
 
+    /**
+     * Method to get similar correspondences
+     * @return Similar correspondences
+     */
     public Map<String, String> getSimilar() {
         return similar;
     }

@@ -32,6 +32,10 @@ public class ServerYaml implements YamlFile{
         return instance;
     }
 
+    /**
+     * Method to load data from file
+     * @throws IOException file not found
+     */
     public void load() throws IOException {
 
         InputStream inputStream = Files.newInputStream(Paths.get("config/config.yml"));
@@ -47,12 +51,28 @@ public class ServerYaml implements YamlFile{
         this.tls_port = (int) server.get("tls_port");
     }
 
+    /**
+     * Method to get no encrypted port
+     * @return The port
+     */
     public int getPort() { return this.port; }
 
+    /**
+     * Method to get SSL port
+     * @return The port
+     */
     public int getSSlPort() { return this.ssl_port; }
 
+    /**
+     * Method to get TLS port
+     * @return The port
+     */
     public int getTLSPort() { return this.tls_port; }
 
+    /**
+     * Method to get server IP
+     * @return The IPv4
+     */
     public String getIP() { return this.ip; }
 
 }

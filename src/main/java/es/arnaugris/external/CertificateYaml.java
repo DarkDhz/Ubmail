@@ -32,6 +32,10 @@ public class CertificateYaml implements YamlFile{
         return instance;
     }
 
+    /**
+     * Method to load data from file
+     * @throws IOException file not found
+     */
     public void load() throws IOException {
 
         InputStream inputStream = Files.newInputStream(Paths.get("config/config.yml"));
@@ -45,10 +49,18 @@ public class CertificateYaml implements YamlFile{
 
     }
 
+    /**
+     * Method to get the certificate path
+     * @return The path
+     */
     public String getPath() {
         return this.path;
     }
 
+    /**
+     * Method to get the password of the cert vault
+     * @return The password
+     */
     public String getPassword() {
         return this.password;
     }

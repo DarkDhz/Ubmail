@@ -10,6 +10,11 @@ public class SMTProtocol extends ProtocolUtils {
         super(reader, writer);
     }
 
+    /**
+     * Method to response SMTP command
+     * @param message Command to response
+     * @throws IOException Cannot response command
+     */
     @Override
     protected void response(String message) throws IOException {
         String opcode = super.split_message(message);

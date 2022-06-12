@@ -30,6 +30,11 @@ public class MailSender {
         return instance;
     }
 
+    /**
+     * Method to send report to client
+     * @param mail The result data
+     * @throws MessagingException Cannot send the report
+     */
     public void sendReport(MailData mail) throws MessagingException {
         String report = mail.getReport();
 

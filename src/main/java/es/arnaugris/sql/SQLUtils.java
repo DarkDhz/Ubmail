@@ -30,6 +30,12 @@ public class SQLUtils {
         return instance;
     }
 
+    /**
+     * Method to generate a MySQL connection
+     * @return An established connection
+     * @throws ClassNotFoundException Can't load driver
+     * @throws SQLException SQL db not found
+     */
     private Connection generateConnection() throws ClassNotFoundException, SQLException {
         SQLYaml sqlYaml = SQLYaml.getInstance();
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -39,6 +45,11 @@ public class SQLUtils {
 
     }
 
+    /**
+     * Method to load domains data from SQL db
+     * @throws SQLException SQL db not found
+     * @throws ClassNotFoundException Can't load driver
+     */
     public void loadDomains() throws SQLException, ClassNotFoundException {
         Connection con = generateConnection();
         Statement st = con.createStatement();
@@ -57,6 +68,11 @@ public class SQLUtils {
 
     }
 
+    /**
+     * Method to load banned domains data from SQL db
+     * @throws SQLException SQL db not found
+     * @throws ClassNotFoundException Can't load driver
+     */
     public void loadBanned() throws SQLException, ClassNotFoundException {
         Connection con = generateConnection();
         Statement st = con.createStatement();
@@ -75,6 +91,10 @@ public class SQLUtils {
 
     }
 
+    /**
+     * Method to get the list of domains
+     * @return List array
+     */
     public ArrayList<String> getList() {
         synchronized (SQLUtils.class) {
             return this.domains;
@@ -82,6 +102,10 @@ public class SQLUtils {
 
     }
 
+    /**
+     * Method to get the list of banned domains
+     * @return List array
+     */
     public ArrayList<String> getBanned() {
         synchronized (SQLUtils.class) {
             return this.banned;

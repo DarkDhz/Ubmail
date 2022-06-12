@@ -21,6 +21,10 @@ public class IDManager {
         return instance;
     }
 
+    /**
+     * Method to get the next thread ID
+     * @return The thread ID
+     */
     public int getNextID() {
         synchronized (IDManager.class) {
             return id++;

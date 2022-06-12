@@ -7,6 +7,9 @@ import java.util.TimerTask;
 
 public class SQLoader implements Runnable{
 
+    /**
+     * Method to load MySQL data every 5 minutes
+     */
     @Override
     public void run() {
         Timer timer = new Timer();

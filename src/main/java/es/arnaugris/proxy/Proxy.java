@@ -22,6 +22,13 @@ public class Proxy implements Runnable {
         }
     }
 
+    /**
+     * Method to generate the ServerSocket
+     * @param ip Server IPv4
+     * @param port server Port
+     * @return The ServerSocket created
+     * @throws IOException Cannot create the server
+     */
     private ServerSocket createServerSocket(String ip, int port) throws IOException {
         InetSocketAddress isa = new InetSocketAddress(ip, port);
         ServerSocket server = new ServerSocket();
@@ -29,6 +36,9 @@ public class Proxy implements Runnable {
         return server;
     }
 
+    /**
+     * Run the server
+     */
     public void run() {
         while(!Thread.currentThread().isInterrupted()) {
             try {

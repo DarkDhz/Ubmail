@@ -78,11 +78,20 @@ public class BlackListUtils {
         return convertBlacklistToMap(result.toString());
     }
 
-    public Map<String, String> fakeDomain() throws IOException  {
+    /**
+     * Method to fake a domain
+     * @return The fake result
+     */
+    public Map<String, String> fakeDomain() {
         String defaultST = "{\"status\":\"Not blacklisted\",\"blacklist_cnt\":1,\"blacklist_severity\":\"\",\"API_calls_remaining\":191,\"response\":\"OK\",\"blacklists\":[]}";
         return convertBlacklistToMap(defaultST);
     }
 
+    /**
+     * Method to convert blacklist JSON to Java MAP
+     * @param data JSON String
+     * @return Blacklist map
+     */
     private Map<String, String> convertBlacklistToMap(String data) {
         data = data.substring(1, data.length()-1);
         String[] keyValuePairs = data.split(",");
@@ -96,6 +105,11 @@ public class BlackListUtils {
         return map;
     }
 
+    /**
+     * Method to check if an url is shorten
+     * @param url URL to check
+     * @return True if shorten, false otherwise
+     */
     public boolean checkShortener(String url) {
         if (url.contains("goo.gl")) {
             return true;
@@ -130,6 +144,11 @@ public class BlackListUtils {
         return url.contains("su.pr");
     }
 
+    /**
+     * Method to get the real URL from shorten service
+     * @param link Link to check
+     * @return The real URL
+     */
     public String getRealURL(String link) {
         //
         HttpURLConnection conn;
@@ -143,6 +162,11 @@ public class BlackListUtils {
         }
     }
 
+    /**
+     * Auxiliary method to get the real URL from shorten service
+     * @param shorten URL to check
+     * @return The real URL
+     */
     public String getRealURLV2(String shorten) throws IOException {
         String destiny = "https://onesimpleapi.com/api/unshorten?token=" + this.shorten_key + "&url=" + shorten;
 

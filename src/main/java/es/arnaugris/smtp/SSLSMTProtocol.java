@@ -15,6 +15,11 @@ public class SSLSMTProtocol extends ProtocolUtils {
         this.socket = socket;
     }
 
+    /**
+     * Method to response SSL SMTP command
+     * @param message Command to response
+     * @throws IOException Cannot response the command
+     */
     @Override
     protected void response(String message) throws IOException {
         String opcode = split_message(message);

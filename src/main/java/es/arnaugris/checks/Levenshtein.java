@@ -21,15 +21,19 @@ public class Levenshtein {
         return instance;
     }
 
+    /**
+     * Method to calculate levenshtein distance between 2 words
+     * @param original Original string
+     * @param toCompare String to compare
+     * @return Distance between strings
+     */
     public int levenshtein(String original, String toCompare) {
         original = original.toLowerCase();
         toCompare = toCompare.toLowerCase();
 
-        // store length
         int m = original.length();
         int n = toCompare.length();
 
-        // matrix to store differences
         int[][] deltaM = new int[m+1][n+1];
 
         for(int i = 1;i <= m; i++)

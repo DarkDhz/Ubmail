@@ -30,15 +30,26 @@ public class MailYaml implements YamlFile{
         return instance;
     }
 
+    /**
+     * Method to get the mail username
+     * @return The username
+     */
     public String getUsername() {
         return this.username;
     }
 
+    /**
+     * Method to get the mail password
+     * @return The password
+     */
     public String getPassword() {
         return password;
     }
 
-
+    /**
+     * Method to load data from file
+     * @throws IOException file not found
+     */
     public void load() throws IOException {
 
         InputStream inputStream = Files.newInputStream(Paths.get("config/config.yml"));
