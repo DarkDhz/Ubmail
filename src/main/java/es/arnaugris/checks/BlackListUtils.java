@@ -106,9 +106,9 @@ public class BlackListUtils {
     }
 
     /**
-     * Method to check if an url is shorten
+     * Method to check if an url is shortened
      * @param url URL to check
-     * @return True if shorten, false otherwise
+     * @return True if shortened, false otherwise
      */
     public boolean checkShortener(String url) {
         if (url.contains("goo.gl")) {

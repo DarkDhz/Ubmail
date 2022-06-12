@@ -40,7 +40,7 @@ public class BlacklistYaml implements YamlFile {
     }
 
     /**
-     * Method to get the shorten API key
+     * Method to get shorten API key
      * @return The key
      */
     public String getShortenKey() {

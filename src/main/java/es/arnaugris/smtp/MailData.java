@@ -1,12 +1,5 @@
 package es.arnaugris.smtp;
 
-import es.arnaugris.external.DomainYaml;
-import es.arnaugris.sql.SQLUtils;
-import es.arnaugris.checks.BlackListUtils;
-import es.arnaugris.checks.Levenshtein;
-
-import java.io.IOException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
