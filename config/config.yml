@@ -18,10 +18,10 @@ ssl:
   pass: "ubmail"
 mail:
   username: "postmaster@darkhorizon.es"
-  password: "ubmail12345"
+  password: "password"
 mysql:
   host: "54.36.191.29"
   port: 3306
   username: "root"
-  password: "ubending"
+  password: "pass"
   database: "ubmail"
