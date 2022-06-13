@@ -1,7 +1,5 @@
 server:
-  ip: "localhost"
-  local: "127.0.0.1"
-  remote: "54.36.191.29"
+  ip: "54.36.191.29"
   port: 25
   ssl_port: 465
   tls_port: 587
@@ -12,9 +10,7 @@ blacklist:
 shorten:
   api_key: "64tNM9WaiGe6EX23cGSI6ZDfqRtqPgJlF866CAcW"
 ssl:
-  local: "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\ubmail.jks"
-  remote: "/home/debian/java/crtf/ubmail.jks"
-  certificate_path: "C:\\Users\\DarkDhz\\IdeaProjects\\Ubmail\\crtf\\ubmail.jks"
+  certificate_path: "/home/debian/java/crtf/ubmail.jks"
   pass: "ubmail"
 mail:
   username: "postmaster@darkhorizon.es"
@@ -23,5 +19,5 @@ mysql:
   host: "54.36.191.29"
   port: 3306
   username: "root"
-  password: "pass"
+  password: "password"
   database: "ubmail"
